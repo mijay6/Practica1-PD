@@ -1,0 +1,15 @@
+test_output_db('code#158#169',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#169#171',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#172#173',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#174#175',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#176#177',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#178#179',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#180#181',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#182#183',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#184#188',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#189#191',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#192#194',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#195#197',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#198#199',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#200#201',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
+test_output_db('code#202#204',t_res(result_id(1,1,1,2),[],[],true,[],[])) .
