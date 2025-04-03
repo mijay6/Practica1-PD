@@ -99,8 +99,6 @@ byte_list([B|Bs]) :-
     byte_list(Bs).
 
 
-% TODO: Se debe hacer con aritmetica de peano?
-
 %--------------------------------------------
 % Predicate 2: byte_convert/2
 %--------------------------------------------
@@ -122,16 +120,53 @@ byte_convert([H1, H0], BinByte) :-
     BinByte = [B7, B6, B5, B4, B3, B2, B1, B0],
     binary_byte(BinByte).
 
-
-%TODO: Terminar de implementar:
-
 %--------------------------------------------
 % Predicate 3: byte_list_convert/2
 %--------------------------------------------
 
+% @pred byte_list_convert(HexList, BinList)
+% @arg HexList A list of hexadecimal bytes (each represented as a list of two hex digits)
+% @arg BinList A list of binary bytes (each represented as a list of eight bits)
 
+% This predicate is true when HexList (a list of hexadecimal bytes)
+% represents the same value as BinList (a list of binary bytes).
 
+% The implementation uses recursion wtith two clauses:
+% 1. Base case: An empty list of hexadecimal bytes is converted to an empty list of binary bytes
+% 2. Recursive case: For a non-empty list, convert the first hexadecimal byte to its binary representation and recursively convert the rest of the list
 
+byte_list_convert([],[]).
+byte_list_convert([H|Hs], [B|Bs]) :-
+    byte_convert(H, B),
+    byte_list_convert(Hs, Bs).
+
+%--------------------------------------------
+% Predicate 4: get_nth_bit_from_byte/3
+%--------------------------------------------
+
+% @pred get_nth_bit_from_byte(N, B, BN)
+% @arg N A Peano number representing the position of the bit (0-7)
+% @arg B A byte (either binary or hexadecimal)
+% @arg BN The N-th bit of the byte B
+
+% This predicate is true when BN is the N-th bit of the byte B.
+% The predicate uses two clauses:
+% 1. If B is a binary byte, reverse the byte and get the N-th bit
+% 2. If B is a hexadecimal byte, convert it to binary and then get the N-th bit
+
+% The implementation uses the byte_convert/2 predicate to convert the hexadecimal byte to binary,
+% and then uses reverse_list/2 to reverse the binary byte.
+% The get_nth_bit/3 predicate is used to extract the N-th bit from the reversed byte.
+
+get_nth_bit_from_byte(N, B, BN) :-
+    binary_byte(B),
+    reverse_list(B, RevB),
+    get_nth_bit(N, RevB, BN).
+get_nth_bit_from_byte(N, B, BN) :-
+    hex_byte(B),
+    byte_convert(B, BinB),
+    reverse_list(BinB, RevB),
+    get_nth_bit(N, RevB, BN).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % AUXILIARY PREDICATES
@@ -165,6 +200,47 @@ nibble_to_bits(h(d), [b(1), b(1), b(0), b(1)]).
 nibble_to_bits(h(e), [b(1), b(1), b(1), b(0)]).
 nibble_to_bits(h(f), [b(1), b(1), b(1), b(1)]).
 
+%--------------------------------------------
+% Auxiliaries for get_nth_bit_from_byte/3
+%--------------------------------------------
+
+% @pred reverse_list(List, Reversed)
+% @arg List A list to be reversed
+% @arg Reversed The reversed version of the list
+
+% This predicate is true when Reversed is the reverse of List.
+% The implementation uses an accumulator to build the reversed list.
+
+reverse_list(List, Reversed) :-
+    reverse_acc(List, [], Reversed).
+
+% @pred reverse_acc(List, Acc, Reversed)
+% @arg List A list to be reversed
+% @arg Acc An accumulator for building the reversed list
+% @arg Reversed The reversed version of the list
+
+% This predicate is true when the accumulator Acc contains the reversed version of List.
+% The implementation uses tail recursion with two clauses:
+% 1. Base case: An empty list is reversed to the accumulator
+% 2. Recursive case: For a non-empty list, prepend the head of the list to the accumulator and recursively reverse the tail of the list.
+
+reverse_acc([], Acc, Acc).
+reverse_acc([X|Xs], Acc, Reversed) :-
+    reverse_acc(Xs, [X|Acc], Reversed).
+
+% @pred get_nth_bit(N, Bits, BN)
+% @arg N A Peano number representing the position of the bit (0-7)
+% @arg Bits A list of bits (binary byte)
+% @arg BN The N-th bit of the byte
+
+% This predicate is true when BN is the N-th bit of the inversed byte Bits.
+% The implementation uses recursion with two clauses:
+% 1. Base case: If N is 0, the first element of Bits is the desired bit
+% 2. Recursive case: For a non-zero N, decrement N and recursively call the predicate with the tail of the list (Bits) to find the next bit.
+
+get_nth_bit(0, [BN|_], BN).
+get_nth_bit(s(N), [_|Bits], BN) :-
+    get_nth_bit(N, Bits, BN).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -216,4 +292,92 @@ nibble_to_bits(h(f), [b(1), b(1), b(1), b(1)]).
 :- test byte_convert(HB, BB) : (BB = [b(1), b(0), b(0), b(1), b(0), b(1), b(1), b(0)]) 
    => (HB = [h(9), h(6)]) + not_fails.
 
+%--------------------------------------------
+% test for byte_list_convert/2
+%--------------------------------------------
 
+% Test empty list conversion
+:- test byte_list_convert(HL, BL) : (HL = []) 
+   => (BL = []) + not_fails.
+% Test conversion of single byte
+:- test byte_list_convert(HL, BL) : (HL = [[h(0), h(0)]]) 
+   => (BL = [[b(0), b(0), b(0), b(0), b(0), b(0), b(0), b(0)]]) + not_fails.
+% Test conversion of multiple bytes
+:- test byte_list_convert(HL, BL) : (HL = [[h(f), h(f)], [h(0), h(0)]]) 
+   => (BL = [[b(1), b(1), b(1), b(1), b(1), b(1), b(1), b(1)], 
+             [b(0), b(0), b(0), b(0), b(0), b(0), b(0), b(0)]]) + not_fails.
+% Test conversion of a sequence of bytes
+:- test byte_list_convert(HL, BL) : (HL = [[h(a), h(b)], [h(c), h(d)], [h(e), h(f)]]) 
+   => (BL = [[b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(1)], 
+             [b(1), b(1), b(0), b(0), b(1), b(1), b(0), b(1)], 
+             [b(1), b(1), b(1), b(0), b(1), b(1), b(1), b(1)]]) + not_fails.
+% Test invalid input: list with non-hex byte
+:- test byte_list_convert(HL, BL) : (HL = [[h(a), h(b)], [h(g), h(h)]]) + fails.
+% Test invalid input: incomplete hex byte
+:- test byte_list_convert(HL, BL) : (HL = [[h(a), h(b)], [h(c)]]) 
+   + fails.
+% Test bidirectionality: determine hex bytes from binary bytes
+:- test byte_list_convert(HL, BL) : (BL = [[b(0), b(1), b(0), b(1), b(1), b(0), b(1), b(0)], [b(1), b(0), b(0), b(1), b(0), b(1), b(1), b(0)]]) 
+   => (HL = [[h(5), h(a)], [h(9), h(6)]]) + not_fails.
+
+%--------------------------------------------
+% test for get_nth_bit_from_byte/3
+%--------------------------------------------
+
+% Test get 0th bit from binary byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = 0, B = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)]) 
+   => (Bit = b(0)) + not_fails.
+% Test get 3rd bit from binary byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = s(s(s(0))), B = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)]) 
+   => (Bit = b(1)) + not_fails.
+%  Test get 7th (most significant) bit from binary byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = s(s(s(s(s(s(s(0))))))), B = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)]) 
+   => (Bit = b(1)) + not_fails.
+% Test get 0th bit from hex byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = 0, B = [h(a), h(5)]) 
+   => (Bit = b(1)) + not_fails.
+% Test get 4rd bit from hex byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = s(s(s(s(0)))), B = [h(a), h(5)]) 
+   => (Bit = b(0)) + not_fails.
+% Test get 7th (least significant) bit from hex byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = s(s(s(s(s(s(s(0))))))), B = [h(a), h(5)]) 
+   => (Bit = b(1)) + not_fails.
+% Test with position out of range (greater than 7)
+:- test get_nth_bit_from_byte(N, B, BN) : (N = s(s(s(s(s(s(s(s(0)))))))), B = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)]) 
+   + fails.
+% Test with position out of range (negative)
+:- test get_nth_bit_from_byte(N, B, BN) : (N = -1, B = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)]) 
+   + fails.
+% Test with incomplete binary byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = 0, B = [b(1), b(0), b(1), b(0), b(1), b(0), b(1)]) 
+   + fails.
+% Test with incomplete hex byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = 0, B = [h(a)]) 
+   + fails.
+% Test with invalid hex byte
+:- test get_nth_bit_from_byte(N, B, BN) : (N = 0, B = [h(x), h(y)]) 
+   + fails.
+% Test with uninitialized position (find position)
+:- test get_nth_bit_from_byte(N, B, BN) : (B = [h(5), h(5)], BN = b(1)) 
+   => (N = 0 ; N = s(s(0)) ; N = s(s(s(s(0)))) ; N = s(s(s(s(s(s(0))))))) 
+   + not_fails.
+% Test with uninitialized position and byte (find all combinations)
+:- test get_nth_bit_from_byte(N, B, BN) : (BN = b(1)) 
+   + not_fails.
+% Test with uninitialized position and bit (find all bits of a hexbyte)
+:- test get_nth_bit_from_byte(N, B, Bit) : 
+   (B = [h(a), h(5)]) 
+   => (
+      (N = 0, Bit = b(1)) ; 
+      (N = s(0), Bit = b(0)) ; 
+      (N = s(s(0)), Bit = b(1)) ; 
+      (N = s(s(s(0))), Bit = b(0)) ; 
+      (N = s(s(s(s(0)))), Bit = b(0)) ; 
+      (N = s(s(s(s(s(0))))), Bit = b(1)) ; 
+      (N = s(s(s(s(s(s(0)))))), Bit = b(0)) ; 
+      (N = s(s(s(s(s(s(s(0))))))), Bit = b(1))
+   ) + not_fails.
+% Test with uninitializaed byte, find a specific byte with a specific bit in a specific position
+:- test get_nth_bit_from_byte(N, B, Bit) : 
+   (N = s(s(s(0))), Bit = b(1)) 
+   + not_fails.
