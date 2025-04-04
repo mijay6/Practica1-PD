@@ -168,6 +168,35 @@ get_nth_bit_from_byte(N, B, BN) :-
     reverse_list(BinB, RevB),
     get_nth_bit(N, RevB, BN).
 
+%--------------------------------------------
+% Predicate 5:  byte_list_clsh/2
+%--------------------------------------------
+
+% @pred byte_list_clsh(L, CLShL)
+% @arg L A list of bytes (either binary or hexadecimal)
+% @arg CLShL A list of bytes (either binary or hexadecimal) after a circular left shift
+
+% This predicate is true when CLShL is the result of a circular left shift of the list of bytes L.
+% The predicate uses two clauses:
+% 1. If L is a list of binary bytes, convert the list to bits, perform the circular left shift, and convert back to bytes
+% 2. If L is a list of hexadecimal bytes, convert the list to binary bytes, perform the circular left shift, and convert back to hexadecimal bytes
+
+% The implementation uses the bytes_to_bits/2 predicate to convert the list of bytes to bits,
+% the rotate_left/2 predicate to perform the circular left shift, and the bits_to_bytes/2 predicate
+% to convert the bits back to bytes.
+% The byte_list_convert/2 predicate is used to convert the hexadecimal bytes to binary bytes.
+
+byte_list_clsh(L, CLShL):-
+   bytes_to_bits(L, AllBits),
+   rotate_left(AllBits, RotatedBits),
+   bits_to_bytes(RotatedBits, CLShL).
+byte_list_clsh(L, CLShL):-
+   byte_list_convert(L, BinList),
+   bytes_to_bits(BinList, AllBits),
+   rotate_left(AllBits, RotatedBits),
+   bits_to_bytes(RotatedBits, BinBytes),
+   byte_list_convert(CLShL, BinBytes).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % AUXILIARY PREDICATES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -242,6 +271,72 @@ get_nth_bit(0, [BN|_], BN).
 get_nth_bit(s(N), [_|Bits], BN) :-
     get_nth_bit(N, Bits, BN).
 
+% @pred my_append(List1, List2, Result)
+% @arg List1 The first list
+% @arg List2 The second list
+% @arg Result The concatenation of List1 and List2
+
+% This predicate is true when Result is the concatenation of List1 and List2.
+% The implementation uses recursion with two clauses:
+% 1. Base case: An empty list concatenated with another list is the second list
+% 2. Recursive case: For a non-empty list, prepend the head of List1 to the result and recursively concatenate the tail of List1 with List2.
+
+my_append([], L, L).
+my_append([H|T], L, [H|R]) :-
+   my_append(T, L, R).
+
+
+%---------------------------------------------
+% Auxiliaries for byte_list_clsh/2
+%---------------------------------------------
+
+% @pred bits_to_bytes(Bits, Bytes)
+% @arg Bits A list of bits (binary bytes)
+% @arg Bytes A list of bytes (binary bytes)
+
+% This predicate is true when Bytes is the list of bytes represented by Bits.
+% The implementation uses recursion with two clauses:
+% 1. Base case: An empty list of bits is converted to an empty list of bytes
+% 2. Recursive case: For a non-empty list, convert the first 8 bits to a byte and recursively convert the rest of the bits to bytes.
+
+% The implementation uses the binary_byte/1 predicate to check that the first 8 bits form a valid binary byte.
+% The my_append/3 predicate is used to concatenate the bits into a single byte.
+
+bytes_to_bits([], []).
+bytes_to_bits([B|Bs], Bits) :-
+   binary_byte(B),
+   bytes_to_bits(Bs, RestBits),
+   my_append(B, RestBits, Bits).
+
+% @pred rotate_left(List, Rotated)
+% @arg List A list of bits
+% @arg Rotated The list of bits after a circular left shift
+
+% This predicate is true when Rotated is the result of a circular left shift of List.
+
+% The implementation uses two clauses:
+% 1. An empty list is rotated to an empty list
+% 2. For a non-empty list, append the tail of the list to the head and return the rotated list, using the my_append/3 predicate.
+
+rotate_left([], []).
+rotate_left([H|T], Rotated) :-
+   my_append(T, [H], Rotated).
+
+% @pred bits_to_bytes(Bits, Bytes)
+% @arg Bits A list of bits
+% @arg Bytes A list of binary bytes
+
+% This predicate is true when Bytes is the list of bytes represented by Bits.
+% The implementation uses recursion with two clauses:
+% 1. Base case: An empty list of bits is converted to an empty list of bytes
+% 2. Recursive case: For a non-empty list, convert the first 8 bits to a byte and recursively convert the rest of the bits to bytes.
+
+% The my_append/3 predicate is used to concatenate the bits into a single byte.
+
+bits_to_bytes([], []).
+bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
+   my_append([B1, B2, B3, B4], [B5, B6, B7, B8], H),
+   bits_to_bytes(RestBits, RestBytes).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tests
@@ -381,3 +476,31 @@ get_nth_bit(s(N), [_|Bits], BN) :-
 :- test get_nth_bit_from_byte(N, B, Bit) : 
    (N = s(s(s(0))), Bit = b(1)) 
    + not_fails.
+
+
+%--------------------------------------------
+% test for byte_list_clsh/2
+%--------------------------------------------
+
+% Test empty list
+:- test byte_list_clsh(L, CLShL) : (L = []) 
+   => (CLShL = []) + not_fails.
+% Test single binary byte
+:- test byte_list_clsh(L, CLShL) : (L = [[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]) 
+   => (CLShL = [[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]) + not_fails.
+% Test single hex byte
+:- test byte_list_clsh(L, CLShL) : (L = [[h(5),h(a)]]) 
+   => (CLShL = [[h(b),h(4)]]) + not_fails.
+% Test multiple binary bytes
+:- test byte_list_clsh(L, CLShL) : (L = [[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)], [b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(0)]]) 
+   => (CLShL = [[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)], 
+                [b(1),b(0),b(0),b(1),b(1),b(0),b(0),b(1)]]) + not_fails.
+% Test with the example from the statement
+:- test byte_list_clsh(L, CLShL) : (L = [[h(5),h(a)], [h(2),h(3)], [h(5),h(5)], [h(3),h(7)]]) 
+   => (CLShL = [[h(b),h(4)], [h(4),h(6)], [h(a),h(a)], [h(6),h(e)]]) + not_fails.
+% Test with a binary byte all zeros (keep it the same)
+:- test byte_list_clsh(L, CLShL) : (L = [[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]) 
+   => (CLShL = [[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]) + not_fails.
+% Test with an wrong entry
+:- test byte_list_clsh(L, CLShL) : 
+   (L = [[h(a),h(5)], [b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]) + fails.
