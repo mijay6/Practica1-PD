@@ -7,7 +7,6 @@ author_data('Dobra','','Mihai','240912').
 % Type definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 % @pred bit(B)
 % @arg B A binary bit represented as b(0) or b(1)
 % Defines the binary bit type. A bit can only be 0 or 1, represented
@@ -20,6 +19,7 @@ bit(b(1)).
 % Defines a binary byte as an ordered list of 8 binary bits.
 % The first element is the most significant bit (position 7),
 % and the last element is the least significant bit (position 0).
+
 binary_byte([B7 , B6 , B5 , B4 , B3 , B2 , B1 , B0]) :-
     bit(B7),
     bit(B6),
@@ -36,6 +36,7 @@ binary_byte([B7 , B6 , B5 , B4 , B3 , B2 , B1 , B0]) :-
 % Each hex digit represents a 4-bit value (0-15).
 % Note that while we use numeric constants (0-9) and alphabetic constants (a-f),
 % they are treated as symbolic constants, not as decimal numbers.
+
 hexd(h(0)).
 hexd(h(1)).
 hexd(h(2)).
@@ -58,6 +59,7 @@ hexd(h(f)).
 % Defines a hexadecimal byte as an ordered list of 2 hex digits (nibbles).
 % The first element is the most significant nibble (position 1),
 % and the second element is the least significant nibble (position 0).
+
 hex_byte([H1, H0]) :-
     hexd(H1),
     hexd(H0).
@@ -66,16 +68,15 @@ hex_byte([H1, H0]) :-
 % @arg B Either a binary byte or a hexadecimal byte
 % Defines the byte type as either a binary byte or a hexadecimal byte.
 % This abstraction allows for multiple representations of the same concept.
+
 byte(BB) :-
     binary_byte(BB).
 byte(HB) :-
     hex_byte(HB).
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Main predicates
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 %--------------------------------------------
 % Predicate 1: byte_list/1
@@ -97,7 +98,6 @@ byte_list([]).
 byte_list([B|Bs]) :-                  
     byte(B),
     byte_list(Bs).
-
 
 %--------------------------------------------
 % Predicate 2: byte_convert/2
@@ -197,6 +197,35 @@ byte_list_clsh(L, CLShL):-
    bits_to_bytes(RotatedBits, BinBytes),
    byte_list_convert(CLShL, BinBytes).
 
+%--------------------------------------------
+% Predicate 6: byte_list_crsh/2
+%--------------------------------------------
+
+% @pred byte_list_crsh(L, CRShL)
+% @arg L A list of bytes (either binary or hexadecimal)
+% @arg CRShL A list of bytes (either binary or hexadecimal) after a circular right shift
+
+% This predicate is true when CRShL is the result of a circular right shift of the list of bytes L.
+% The predicate uses two clauses:
+% 1. If L is a list of binary bytes, convert the list to bits, perform the circular right shift, and convert back to bytes
+% 2. If L is a list of hexadecimal bytes, convert the list to binary bytes, perform the circular right shift, and convert back to hexadecimal bytes
+
+% The implementation uses the bytes_to_bits/2 predicate to convert the list of bytes to bits,
+% the rotate_right/2 predicate to perform the circular right shift, and the bits_to_bytes/2 predicate
+% to convert the bits back to bytes.
+% The byte_list_convert/2 predicate is used to convert the hexadecimal bytes to binary bytes.
+
+byte_list_crsh(L, CRShL):-
+   bytes_to_bits(L, AllBits),
+   rotate_right(AllBits, RotatedBits),
+   bits_to_bytes(RotatedBits, CRShL).
+byte_list_crsh(L, CRShL):-
+   byte_list_convert(L, BinList),
+   bytes_to_bits(BinList, AllBits),
+   rotate_right(AllBits, RotatedBits),
+   bits_to_bytes(RotatedBits, BinBytes),
+   byte_list_convert(CRShL, BinBytes).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % AUXILIARY PREDICATES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -285,7 +314,6 @@ my_append([], L, L).
 my_append([H|T], L, [H|R]) :-
    my_append(T, L, R).
 
-
 %---------------------------------------------
 % Auxiliaries for byte_list_clsh/2
 %---------------------------------------------
@@ -313,7 +341,6 @@ bytes_to_bits([B|Bs], Bits) :-
 % @arg Rotated The list of bits after a circular left shift
 
 % This predicate is true when Rotated is the result of a circular left shift of List.
-
 % The implementation uses two clauses:
 % 1. An empty list is rotated to an empty list
 % 2. For a non-empty list, append the tail of the list to the head and return the rotated list, using the my_append/3 predicate.
@@ -337,6 +364,25 @@ bits_to_bytes([], []).
 bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
    my_append([B1, B2, B3, B4], [B5, B6, B7, B8], H),
    bits_to_bytes(RestBits, RestBytes).
+
+%---------------------------------------------
+% Auxiliaries for byte_list_crsh/2
+%---------------------------------------------
+
+% @pred rotate_right(List, Rotated)
+% @arg List A list of bits
+% @arg Rotated The list of bits after a circular right shift
+
+% This predicate is true when Rotated is the result of a circular right shift of List.
+% The reverse_list/2 predicate is used to reverse the list,
+% and then the rotate_left/2 predicate is used to perform the circular left shift on the reversed list.
+% Finally, the reverse_list/2 predicate is used again to reverse the rotated list back to its original order.
+
+rotate_right(L, Rotated) :-
+   reverse_list(L, Reversed),
+   rotate_left(Reversed, RotatedReversed),
+   reverse_list(RotatedReversed, Rotated).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tests
@@ -409,8 +455,7 @@ bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
 % Test invalid input: list with non-hex byte
 :- test byte_list_convert(HL, BL) : (HL = [[h(a), h(b)], [h(g), h(h)]]) + fails.
 % Test invalid input: incomplete hex byte
-:- test byte_list_convert(HL, BL) : (HL = [[h(a), h(b)], [h(c)]]) 
-   + fails.
+:- test byte_list_convert(HL, BL) : (HL = [[h(a), h(b)], [h(c)]]) + fails.
 % Test bidirectionality: determine hex bytes from binary bytes
 :- test byte_list_convert(HL, BL) : (BL = [[b(0), b(1), b(0), b(1), b(1), b(0), b(1), b(0)], [b(1), b(0), b(0), b(1), b(0), b(1), b(1), b(0)]]) 
    => (HL = [[h(5), h(a)], [h(9), h(6)]]) + not_fails.
@@ -460,8 +505,7 @@ bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
 :- test get_nth_bit_from_byte(N, B, BN) : (BN = b(1)) 
    + not_fails.
 % Test with uninitialized position and bit (find all bits of a hexbyte)
-:- test get_nth_bit_from_byte(N, B, Bit) : 
-   (B = [h(a), h(5)]) 
+:- test get_nth_bit_from_byte(N, B, Bit) : (B = [h(a), h(5)]) 
    => (
       (N = 0, Bit = b(1)) ; 
       (N = s(0), Bit = b(0)) ; 
@@ -473,10 +517,8 @@ bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
       (N = s(s(s(s(s(s(s(0))))))), Bit = b(1))
    ) + not_fails.
 % Test with uninitializaed byte, find a specific byte with a specific bit in a specific position
-:- test get_nth_bit_from_byte(N, B, Bit) : 
-   (N = s(s(s(0))), Bit = b(1)) 
+:- test get_nth_bit_from_byte(N, B, Bit) : (N = s(s(s(0))), Bit = b(1)) 
    + not_fails.
-
 
 %--------------------------------------------
 % test for byte_list_clsh/2
@@ -502,5 +544,34 @@ bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
 :- test byte_list_clsh(L, CLShL) : (L = [[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]) 
    => (CLShL = [[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]) + not_fails.
 % Test with an wrong entry
-:- test byte_list_clsh(L, CLShL) : 
+:- test byte_list_clsh(L, CLShL) : (L = [[h(a),h(5)], [b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]) + fails.
+
+%--------------------------------------------
+% test for byte_list_crsh/2
+%--------------------------------------------
+
+% Test empty list
+:- test byte_list_crsh(L, CRShL) : (L = []) 
+   => (CRShL = []) + not_fails.
+% Test single binary byte
+:- test byte_list_crsh(L, CRShL) : (L = [[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]) 
+   => (CRShL = [[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]) + not_fails.
+% Test single hex byte
+:- test byte_list_crsh(L, CRShL) : (L = [[h(5),h(a)]]) 
+   => (CRShL = [[h(2),h(d)]]) + not_fails.
+% Test multiple binary bytes
+:- test byte_list_crsh(L, CRShL) : (L = [[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)], [b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(0)]]) 
+   => (CRShL = [[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)], 
+                [b(0),b(1),b(1),b(0),b(0),b(1),b(1),b(0)]]) + not_fails.
+% Test with the example from the statement
+:- test byte_list_crsh(L, CRShL) : (L = [[h(b), h(4)], [h(4), h(6)], [h(a), h(a)],[h(6), h(e)]])
+   => (CRShL = [[h(5),h(a)], [h(2),h(3)], [h(5),h(5)], [h(3),h(7)]]) + not_fails.
+% Test with a binary byte all zeros (keep it the same)
+:- test byte_list_crsh(L, CRShL) : (L = [[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]) 
+   => (CRShL = [[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]) + not_fails.
+% Test with an alternating hex byte (FF)
+:- test byte_list_crsh(L, CRShL) : (L = [[h(f),h(f)]]) 
+   => (CRShL = [[h(f),h(f)]]) + not_fails.
+% Test with mixed entry types (should fail)
+:- test byte_list_crsh(L, CRShL) : 
    (L = [[h(a),h(5)], [b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]) + fails.
