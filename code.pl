@@ -213,7 +213,7 @@ byte_list_clsh(L, CLShL):-
 % The implementation uses the bytes_to_bits/2 predicate to convert the list of bytes to bits,
 % the rotate_right/2 predicate to perform the circular right shift, and the bits_to_bytes/2 predicate
 % to convert the bits back to bytes.
-% The byte_list_convert/2 predicate is used to convert the hexadecimal bytes to binary bytes.
+% The byte_list_convert/2 predicate is used to convert the hexadecimal bytes to binary bytes and vice versa.
 
 byte_list_crsh(L, CRShL):-
    bytes_to_bits(L, AllBits),
@@ -225,6 +225,42 @@ byte_list_crsh(L, CRShL):-
    rotate_right(AllBits, RotatedBits),
    bits_to_bytes(RotatedBits, BinBytes),
    byte_list_convert(CRShL, BinBytes).
+
+%--------------------------------------------
+% Predicate 7: byte_xor/3
+%--------------------------------------------
+
+% @pred byte_xor(B1, B2, B3)
+% @arg B1 The first byte (either binary or hexadecimal)
+% @arg B2 The second byte (either binary or hexadecimal)
+% @arg B3 The result of the XOR operation between B1 and B2
+
+% This predicate is true when B3 is the result of the XOR operation between B1 and B2.
+% The predicate uses two clauses:
+% 1. If B1 and B2 are binary bytes, reverse both bytes, perform the XOR operation, and reverse the result
+% 2. If B1 and B2 are hexadecimal bytes, convert them to binary, perform the XOR operation, and convert the result back to hexadecimal
+
+% The implementation uses byte/1 to check that B1 and B2 are valid bytes, the byte_convert/2 predicate to convert the hexadecimal byte to binary byte and vice versa,
+% the reverse_list/2 predicate to reverse the bytes, and the xor_list/3 predicate to perform the XOR operation on individual bits
+
+byte_xor([], [], []).
+byte_xor(B1, B2, B3):-
+   byte(B1),
+   byte(B2),
+   reverse_list(B1, RevB1),
+   reverse_list(B2, RevB2),
+   xor_list(RevB1, RevB2, RevB3),
+   reverse_list(RevB3, B3).
+byte_xor(B1, B2, B3):-
+   byte(B1),
+   byte(B2),
+   byte_convert(B1, BinB1),
+   byte_convert(B2, BinB2),
+   reverse_list(BinB1, RevBinB1),
+   reverse_list(BinB2, RevBinB2),
+   xor_list(RevBinB1, RevBinB2, RevBinB3),
+   reverse_list(RevBinB3, RevB3),
+   byte_convert(B3, RevB3).   
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % AUXILIARY PREDICATES
@@ -238,7 +274,7 @@ byte_list_crsh(L, CRShL):-
 % @arg Nibble A hexadecimal digit (0-f)
 % @arg Bits List of 4 bits representing the nibble
 
-% Converts a hexadecimal digit (nibble) to its 4-bit binary representation.
+% This predicate converts a hexadecimal digit (nibble) to its 4-bit binary representation.
 % Each hex digit maps to a unique pattern of 4 bits.
 
 nibble_to_bits(h(0), [b(0), b(0), b(0), b(0)]).
@@ -383,13 +419,46 @@ rotate_right(L, Rotated) :-
    rotate_left(Reversed, RotatedReversed),
    reverse_list(RotatedReversed, Rotated).
 
+%---------------------------------------------
+% Auxiliaries for byte_xor/3
+%---------------------------------------------
+
+% @pred xor_list(List1, List2, Result)
+% @arg List1 The first list of bits
+% @arg List2 The second list of bits
+% @arg Result The result of the XOR operation between List1 and List2
+
+% This predicate is true when Result is the result of the XOR operation between List1 and List2.
+% The implementation uses recursion with two clauses:
+% 1. Base case: An empty list XORed with another empty list is an empty list
+% 2. Recursive case: For a non-empty list, perform the XOR operation on the first elements of both lists and recursively XOR the rest of the lists.
+
+% The xor_bits/3 predicate is used to perform the XOR operation on individual bits.
+
+xor_list([], [], []).
+xor_list([B1|Bs1], [B2|Bs2], [B3|Bs3]):-
+   xor_bits(B1, B2, B3),
+   xor_list(Bs1, Bs2, Bs3).
+
+% @pred xor_bits(B1, B2, B3)
+% @arg B1 The first bit
+% @arg B2 The second bit
+% @arg B3 The result of the XOR operation between B1 and B2
+
+% This predicate is true when B3 is the result of the XOR operation between B1 and B2.
+% The implementation uses a simple case analysis to determine the result of the XOR operation.
+
+xor_bits(b(0),b(0),b(0)).
+xor_bits(b(0),b(1),b(1)).
+xor_bits(b(1),b(0),b(1)).
+xor_bits(b(1),b(1),b(0)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tests
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %--------------------------------------------
-% test for byte_list/1
+% Tests for byte_list/1
 %--------------------------------------------
 
 % Test empty list
@@ -410,7 +479,7 @@ rotate_right(L, Rotated) :-
 :- test byte_list(L) : (L = [[h(g), h(5)]]) + fails.
 
 %--------------------------------------------
-% test for byte_convert/2
+% Tests for byte_convert/2
 %--------------------------------------------
 
 % Test converting 0x00 to binary
@@ -434,7 +503,7 @@ rotate_right(L, Rotated) :-
    => (HB = [h(9), h(6)]) + not_fails.
 
 %--------------------------------------------
-% test for byte_list_convert/2
+% Tests for byte_list_convert/2
 %--------------------------------------------
 
 % Test empty list conversion
@@ -461,7 +530,7 @@ rotate_right(L, Rotated) :-
    => (HL = [[h(5), h(a)], [h(9), h(6)]]) + not_fails.
 
 %--------------------------------------------
-% test for get_nth_bit_from_byte/3
+% Tests for get_nth_bit_from_byte/3
 %--------------------------------------------
 
 % Test get 0th bit from binary byte
@@ -521,7 +590,7 @@ rotate_right(L, Rotated) :-
    + not_fails.
 
 %--------------------------------------------
-% test for byte_list_clsh/2
+% Tests for byte_list_clsh/2
 %--------------------------------------------
 
 % Test empty list
@@ -547,7 +616,7 @@ rotate_right(L, Rotated) :-
 :- test byte_list_clsh(L, CLShL) : (L = [[h(a),h(5)], [b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]) + fails.
 
 %--------------------------------------------
-% test for byte_list_crsh/2
+% Tests for byte_list_crsh/2
 %--------------------------------------------
 
 % Test empty list
@@ -575,3 +644,34 @@ rotate_right(L, Rotated) :-
 % Test with mixed entry types (should fail)
 :- test byte_list_crsh(L, CRShL) : 
    (L = [[h(a),h(5)], [b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]) + fails.
+
+%----------------------------------------------
+% Tests for byte_xor/3
+%----------------------------------------------
+% Test empty list
+:- test byte_xor(B1, B2, B3) : (B1 = [], B2 = []) 
+   => (B3 = []) + not_fails.
+% Test with the example form the statement
+:- test byte_xor(B1, B2, B3) : (B1 = [h(5), h(a)], B2 = [h(2), h(3)]) 
+   => (B3 = [h(7), h(9)]) + not_fails.
+% Test with two binary bytes
+:- test byte_xor(B1, B2, B3) : (B1 = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)], B2 = [b(0), b(1), b(0), b(1), b(0), b(1), b(0), b(1)]) 
+   => (B3 = [b(1), b(1), b(1), b(1), b(1), b(1), b(1), b(1)]) + not_fails.
+% Test with two hex bytes
+:- test byte_xor(B1, B2, B3) : (B1 = [h(a), h(a)], B2 = [h(5), h(5)]) 
+   => (B3 = [h(f), h(f)]) + not_fails.
+% Test with property of XOR: A XOR A = 0
+:- test byte_xor(B1, B2, B3) : (B1 = [h(a), h(a)], B2 = [h(a), h(a)]) 
+   => (B3 = [h(0), h(0)]) + not_fails.
+% Test with property of XOR: A XOR 0 = A
+:- test byte_xor(B1, B2, B3) : (B1 = [h(c), h(d)], B2 = [h(0), h(0)]) 
+   => (B3 = [h(c), h(d)]) + not_fails.
+% Test with binary bytes out of order (should fail)
+:- test byte_xor(B1, B2, B3) : (B1 = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)], B2 = [b(1), b(0), b(1), b(0), b(1), b(0), b(1)]) 
+   + fails.
+% Test with mixed types (should fail)
+:- test byte_xor(B1, B2, B3) : (B1 = [h(a), h(a)], B2 = [b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)]) 
+   + fails.
+% Test bidirectionality (given B1 and B3, find B2)
+:- test byte_xor(B1, B2, B3) : (B1 = [h(5), h(5)], B3 = [h(a), h(a)]) 
+   => (B2 = [h(f), h(f)]) + not_fails.
