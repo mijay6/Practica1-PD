@@ -1,0 +1,681 @@
+<!DOCTYPE HTML><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#273f79"/><link rel="stylesheet" href="lpdoc.css" type="text/css"/><script type="text/javascript" src="lpdoc.js"></script><title>Práctica 1: Programación Lógica Pura</title></head><body><div class="lpdoc-page fixleftbar"><a href="#" id="sidebar-toggle-button" class="lpdoc-navbutton"><span id="sidebar-button-arrow">&#9776;</span></a><div id="sidebar" class="lpdoc-sidebar"><div class="lpdoc-nav"><span class="lpdoc-on-right"><a class="lpdoc-navbutton" href="/">&#x2302;</a><span class="lpdoc-navbutton-disabled">&#x2190;</span><a class="lpdoc-navbutton" href="codefulltoc.html">&#x2192;</a><a class="lpdoc-navbutton" href="codesearch.html">&#x1F50D;</a></span><span><a href="codefulltoc.html">TOC</a></span></div><hr></hr><ul class="lpdoc-itemize-sectpath"><li><a href=""><strong>Práctica 1: Programación Lógica Pura</strong></a></li></ul><hr></hr><ul></ul></div><div class="lpdoc-main"><div><br/><div class="lpdoc-cover-title"><h1 class="lpdoc-cover-h1">Práctica 1: Programación Lógica Pura</h1></div><div class="lpdoc-cover-authors"></div><div class="lpdoc-cover-subtitle-extra"></div><div class="lpdoc-clearer"></div></div>
+<br/><br/>
+<div id="Introducción"><h2>Introducción</h2> <p>Este módulo implementa operaciones básicas para trabajar con bytes en diferentes representaciones. Los bytes pueden representarse en formato binario (como 8 bits) o en formato hexadecimal (como 2 dígitos hexadecimales).<p></div><div id="Representación de datos"><h2>Representación de datos</h2> <p>El módulo utiliza dos representaciones principales para los bytes:<p><ul> <li><strong>Bytes binarios</strong>: Representados como listas de 8 bits. Cada bit es una estructura b(0) o b(1). <li><strong>Bytes hexadecimales</strong>: Representados como listas de 2 dígitos hexadecimales. Cada dígito es una estructura h(X) donde X es un valor entre 0 y f. </ul> <p></div><div id="Funcionalidades"><h2>Funcionalidades</h2> <p>El módulo implementa las siguientes funcionalidades:<p><ol> <li >Verificación de listas de bytes <li >Conversión entre representaciones binarias y hexadecimales <li >Obtención de un bit específico de un byte <li >Desplazamiento circular a la izquierda de listas de bytes <li >Desplazamiento circular a la derecha de listas de bytes <li >Operación XOR entre bytes </ol> <p></div><div id="Ejemplos de uso"><h2>Ejemplos de uso</h2> <p>A continuación, se presenta un ejemplo de cada funcionalidad principal del módulo.<p><strong>Verificación de lista de bytes:</strong> <pre class="lpdoc-codeblock">
+?- byte_list([[h(a),h(5)], [b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]).
+false.</pre> <p><strong>Conversión entre representaciones:</strong> <pre class="lpdoc-codeblock">
+?- byte_convert([h(5),h(a)], BinByte).
+BinByte = [b(0),b(1),b(0),b(1),b(1),b(0),b(1),b(0)]</pre> <p><strong>Conversión de listas de bytes:</strong> <pre class="lpdoc-codeblock">
+?- byte_list_convert([[h(a),h(b)],[h(c),h(d)]], BinList).
+BinList = [[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(1)],
+           [b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(1)]]</pre> <p><strong>Obtener bits específicos:</strong> <pre class="lpdoc-codeblock">
+?- get_nth_bit_from_byte(s(s(s(0))), [h(5),h(a)], Bit).
+Bit = b(0)</pre> <p><strong>Desplazamiento circular a la izquierda:</strong> <pre class="lpdoc-codeblock">
+?- byte_list_clsh([[h(5),h(a)], [h(2),h(3)]], CLShL).
+CLShL = [[h(b),h(4)], [h(4),h(6)]]</pre> <p><strong>Desplazamiento circular a la derecha:</strong> <pre class="lpdoc-codeblock">
+?- byte_list_crsh([[h(b),h(4)], [h(4),h(6)]], CRShL).
+CRShL = [[h(5),h(a)], [h(2),h(3)]]</pre> <p><strong>Operación XOR entre bytes:</strong> <pre class="lpdoc-codeblock">
+?- byte_xor([h(a),h(5)], [h(5),h(a)], Result).
+Result = [h(f),h(f)]</pre></div><br/><div id="Usage and interface"><h2>Usage and interface</h2><div class="lpdoc-cartouche"><ul><li><strong>Library usage:</strong><br/><tt>:- use_module(/home/mihai/Practica1-PD/Practica1-PD/code.pl).</tt><li><strong>Exports:</strong><br/><ul class="lpdoc-itemize-minus"><li><em>Predicates:</em><br/><a class="lpdoc-idx-anchor" id="0" href="#author_data/4"><tt>author_data/4</tt></a>, <a class="lpdoc-idx-anchor" id="1" href="#byte_list/1"><tt>byte_list/1</tt></a>, <a class="lpdoc-idx-anchor" id="2" href="#byte_convert/2"><tt>byte_convert/2</tt></a>, <a class="lpdoc-idx-anchor" id="3" href="#byte_list_convert/2"><tt>byte_list_convert/2</tt></a>, <a class="lpdoc-idx-anchor" id="4" href="#get_nth_bit_from_byte/3"><tt>get_nth_bit_from_byte/3</tt></a>, <a class="lpdoc-idx-anchor" id="5" href="#byte_list_clsh/2"><tt>byte_list_clsh/2</tt></a>, <a class="lpdoc-idx-anchor" id="6" href="#byte_list_crsh/2"><tt>byte_list_crsh/2</tt></a>, <a class="lpdoc-idx-anchor" id="7" href="#byte_xor/3"><tt>byte_xor/3</tt></a>, <a class="lpdoc-idx-anchor" id="8" href="#nibble_to_bits/2"><tt>nibble_to_bits/2</tt></a>, <a class="lpdoc-idx-anchor" id="9" href="#reverse_list/2"><tt>reverse_list/2</tt></a>, <a class="lpdoc-idx-anchor" id="10" href="#reverse_acc/3"><tt>reverse_acc/3</tt></a>, <a class="lpdoc-idx-anchor" id="11" href="#get_nth_bit/3"><tt>get_nth_bit/3</tt></a>, <a class="lpdoc-idx-anchor" id="12" href="#my_append/3"><tt>my_append/3</tt></a>, <a class="lpdoc-idx-anchor" id="13" href="#bytes_to_bits/2"><tt>bytes_to_bits/2</tt></a>, <a class="lpdoc-idx-anchor" id="14" href="#rotate_left/2"><tt>rotate_left/2</tt></a>, <a class="lpdoc-idx-anchor" id="15" href="#bits_to_bytes/2"><tt>bits_to_bytes/2</tt></a>, <a class="lpdoc-idx-anchor" id="16" href="#rotate_right/2"><tt>rotate_right/2</tt></a>, <a class="lpdoc-idx-anchor" id="17" href="#xor_list/3"><tt>xor_list/3</tt></a>, <a class="lpdoc-idx-anchor" id="18" href="#xor_bits/3"><tt>xor_bits/3</tt></a>.
+<li><em>Regular Types:</em><br/><a class="lpdoc-idx-anchor" id="19" href="#bit/1"><tt>bit/1</tt></a>, <a class="lpdoc-idx-anchor" id="20" href="#binary_byte/1"><tt>binary_byte/1</tt></a>, <a class="lpdoc-idx-anchor" id="21" href="#hexd/1"><tt>hexd/1</tt></a>, <a class="lpdoc-idx-anchor" id="22" href="#hex_byte/1"><tt>hex_byte/1</tt></a>, <a class="lpdoc-idx-anchor" id="23" href="#byte/1"><tt>byte/1</tt></a>.
+</ul></ul></div></div><div id="Documentation on exports"><h2>Documentation on exports</h2><div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="author_data/4" href="codesearch.html#author_data/4">author_data/4</a></div><div class="lpdoc-deftext">Define los datos del autor del módulo</div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">REGTYPE</span><a class="lpdoc-idx-anchor" id="bit/1" href="codesearch.html#bit/1">bit/1</a></div><div class="lpdoc-deftext">Define el tipo bit binario. Un bit solo puede ser 0 o 1, representado estructuralmente como b(0) o b(1).<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>bit(B)</tt>
+</span><p><span class="lpdoc-var">B</span> es un bit binario representado como b(0) o b(1).</p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">REGTYPE</span><a class="lpdoc-idx-anchor" id="binary_byte/1" href="codesearch.html#binary_byte/1">binary_byte/1</a></div><div class="lpdoc-deftext">Define un byte binario como una lista ordenada de 8 bits. El primer elemento es el bit más significativo (posición 7), y el último elemento es el bit menos significativo (posición 0).<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>binary_byte(B)</tt>
+</span><p><span class="lpdoc-var">B</span> es una lista de 8 bits, del bit más significativo (posición 7) al menos significativo (posición 0).</p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">REGTYPE</span><a class="lpdoc-idx-anchor" id="hexd/1" href="codesearch.html#hexd/1">hexd/1</a></div><div class="lpdoc-deftext">Define un dígito hexadecimal (nibble). Cada dígito hex representa un valor de 4 bits (0-15). Aunque usamos constantes numéricas (0-9) y alfabéticas (a-f), se tratan como constantes simbólicas, no como números decimales.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>hexd(H)</tt>
+</span><p><span class="lpdoc-var">H</span> es un dígito hexadecimal (nibble) representado estructuralmente como h(X).</p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">REGTYPE</span><a class="lpdoc-idx-anchor" id="hex_byte/1" href="codesearch.html#hex_byte/1">hex_byte/1</a></div><div class="lpdoc-deftext">Define un byte hexadecimal como una lista ordenada de 2 dígitos hexadecimales. El primer elemento es el nibble más significativo (posición 1), y el segundo elemento es el nibble menos significativo (posición 0).<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>hex_byte(B)</tt>
+</span><p><span class="lpdoc-var">B</span> es una lista de 2 dígitos hexadecimales, del más significativo (posición 1) al menos significativo (posición 0).</p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">REGTYPE</span><a class="lpdoc-idx-anchor" id="byte/1" href="codesearch.html#byte/1">byte/1</a></div><div class="lpdoc-deftext">Define el tipo byte como un byte binario o un byte hexadecimal. Esta abstracción permite múltiples representaciones del mismo concepto.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>byte(B)</tt>
+</span><p><span class="lpdoc-var">B</span> es un byte, ya sea en formato binario o hexadecimal.</p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="byte_list/1" href="codesearch.html#byte_list/1">byte_list/1</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando L es una lista válida de bytes. Cada elemento de la lista debe ser un byte binario (8 bits) o un byte hexadecimal (2 nibbles). La implementación utiliza recursión con dos cláusulas: <ol> <li value="1"> Caso base: Una lista vacía es una lista de bytes válida <li value="2"> Caso recursivo: Para una lista no vacía, verifique que el primer elemento </ol> sea un byte válido y que el resto de la lista sea una lista de bytes válida<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p><span class="lpdoc-var">L</span> es una lista de bytes (binarios o hexadecimales). Su implementación es: <pre class="lpdoc-codeblock">byte_list([]).
+byte_list([B|Bs]) :-
+    byte(B),
+    byte_list(Bs).
+</pre></p><ul class="lpdoc-itemize-minus"></ul>
+<strong>Other properties:</strong> <br/><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="25" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="24" href="codesearch.html#L=[]"><tt>L=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="26" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list(L)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="28" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="27" href="codesearch.html#L=[[h(0),h(5)],[h(6),h(f)]]"><tt>L=[[h(0),h(5)],[h(6),h(f)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="29" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list(L)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="31" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="30" href="codesearch.html#L=[[b(1),b(0),b(1),b(0),b(0),b(1),b(0),b(1)]]"><tt>L=[[b(1),b(0),b(1),b(0),b(0),b(1),b(0),b(1)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="32" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list(L)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="34" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="33" href="codesearch.html#L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)],[h(a),h(b)]]"><tt>L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)],[h(a),h(b)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="35" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list(L)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="37" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="36" href="codesearch.html#L=[1,2,3]"><tt>L=[1,2,3]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="38" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list(L)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="40" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="39" href="codesearch.html#L=[[h(a),h(b)],42]"><tt>L=[[h(a),h(b)],42]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="41" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list(L)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="43" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="42" href="codesearch.html#L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]"><tt>L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="44" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list(L)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list(L)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="46" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="45" href="codesearch.html#L=[[h(g),h(5)]]"><tt>L=[[h(g),h(5)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="47" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list(L)</span> fail.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="byte_convert/2" href="codesearch.html#byte_convert/2">byte_convert/2</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando HexByte (en hexadecimal) representa el mismo valor que BinByte (en binario). La implementación convierte cada dígito hexadecimal en su representación binaria de 4 bits y luego concatena estos bits para formar el byte binario completo de 8 bits.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HexByte,BinByte)</tt>
+</span><p><span class="lpdoc-var">HexByte</span> es un byte hexadecimal y <span class="lpdoc-var">BinByte</span> es su representación binaria equivalente. Su implementación es: <pre class="lpdoc-codeblock">byte_convert([H1,H0],BinByte) :-
+    hex_byte([H1,H0]),
+    nibble_to_bits(H1,[B7,B6,B5,B4]),
+    nibble_to_bits(H0,[B3,B2,B1,B0]),
+    BinByte=[B7,B6,B5,B4,B3,B2,B1,B0],
+    binary_byte(BinByte).
+</pre></p><ul class="lpdoc-itemize-minus"><li><em>Call and exit should be compatible with:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="48" href="#hex_byte/1"><tt>hex_byte/1</tt></a>)</span><span><span class="lpdoc-var">HexByte</span> es una lista de 2 dígitos hexadecimales, del más significativo (posición 1) al menos significativo (posición 0).
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="49" href="#binary_byte/1"><tt>binary_byte/1</tt></a>)</span><span><span class="lpdoc-var">BinByte</span> es una lista de 8 bits, del bit más significativo (posición 7) al menos significativo (posición 0).
+</span>
+</ul>
+<strong>Other properties:</strong> <br/><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HB,BB)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="51" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="50" href="codesearch.html#HB=[h(0),h(0)]"><tt>HB=[h(0),h(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="53" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="52" href="codesearch.html#BB=[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]"><tt>BB=[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="54" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_convert(HB,BB)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HB,BB)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="56" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="55" href="codesearch.html#HB=[h(f),h(f)]"><tt>HB=[h(f),h(f)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="58" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="57" href="codesearch.html#BB=[b(1),b(1),b(1),b(1),b(1),b(1),b(1),b(1)]"><tt>BB=[b(1),b(1),b(1),b(1),b(1),b(1),b(1),b(1)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="59" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_convert(HB,BB)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HB,BB)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="61" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="60" href="codesearch.html#HB=[h(5),h(a)]"><tt>HB=[h(5),h(a)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="63" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="62" href="codesearch.html#BB=[b(0),b(1),b(0),b(1),b(1),b(0),b(1),b(0)]"><tt>BB=[b(0),b(1),b(0),b(1),b(1),b(0),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="64" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_convert(HB,BB)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HB,BB)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="66" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="65" href="codesearch.html#HB=[h(a),h(5)]"><tt>HB=[h(a),h(5)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="68" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="67" href="codesearch.html#BB=[b(1),b(0),b(1),b(0),b(0),b(1),b(0),b(1)]"><tt>BB=[b(1),b(0),b(1),b(0),b(0),b(1),b(0),b(1)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="69" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_convert(HB,BB)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HB,BB)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="71" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="70" href="codesearch.html#HB=[h(g),h(5)]"><tt>HB=[h(g),h(5)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="72" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_convert(HB,BB)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HB,BB)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="74" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="73" href="codesearch.html#HB=[h(a)]"><tt>HB=[h(a)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="75" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_convert(HB,BB)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_convert(HB,BB)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="77" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="76" href="codesearch.html#BB=[b(1),b(0),b(0),b(1),b(0),b(1),b(1),b(0)]"><tt>BB=[b(1),b(0),b(0),b(1),b(0),b(1),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="79" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="78" href="codesearch.html#HB=[h(9),h(6)]"><tt>HB=[h(9),h(6)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="80" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_convert(HB,BB)</span> do not fail.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="byte_list_convert/2" href="codesearch.html#byte_list_convert/2">byte_list_convert/2</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando HexList (una lista de bytes hexadecimales) representa el mismo valor que BinList (una lista de bytes binarios). La implementación utiliza recursión con dos cláusulas: <ol> <li value="1"> Caso base: Una lista vacía de bytes hexadecimales se convierte en una lista vacía de bytes binarios. <li value="2"> Caso recursivo: Para una lista no vacía, se convierte el primer byte hexadecimal a su representación binaria y se convierte recursivamente el resto de la lista. </ol> <p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HexList,BinList)</tt>
+</span><p><span class="lpdoc-var">HexList</span> es una lista de bytes hexadecimales y <span class="lpdoc-var">BinList</span> es su representación binaria equivalente. Su implementación es: <pre class="lpdoc-codeblock">byte_list_convert([],[]).
+byte_list_convert([H|Hs],[B|Bs]) :-
+    byte_convert(H,B),
+    byte_list_convert(Hs,Bs).
+</pre></p><ul class="lpdoc-itemize-minus"></ul>
+<strong>Other properties:</strong> <br/><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HL,BL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="82" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="81" href="codesearch.html#HL=[]"><tt>HL=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="84" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="83" href="codesearch.html#BL=[]"><tt>BL=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="85" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_convert(HL,BL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HL,BL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="87" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="86" href="codesearch.html#HL=[[h(0),h(0)]]"><tt>HL=[[h(0),h(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="89" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="88" href="codesearch.html#BL=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]"><tt>BL=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="90" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_convert(HL,BL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HL,BL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="92" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="91" href="codesearch.html#HL=[[h(f),h(f)],[h(0),h(0)]]"><tt>HL=[[h(f),h(f)],[h(0),h(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="94" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="93" href="codesearch.html#BL=[[b(1),b(1),b(1),b(1),b(1),b(1),b(1),b(1)],[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]"><tt>BL=[[b(1),b(1),b(1),b(1),b(1),b(1),b(1),b(1)],[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="95" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_convert(HL,BL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HL,BL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="97" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="96" href="codesearch.html#HL=[[h(a),h(b)],[h(c),h(d)],[h(e),h(f)]]"><tt>HL=[[h(a),h(b)],[h(c),h(d)],[h(e),h(f)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="99" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="98" href="codesearch.html#BL=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(1)],[b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(1)],[b(1),b(1),b(1),b(0),b(1),b(1),b(1),b(1)]]"><tt>BL=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(1)],[b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(1)],[b(1),b(1),b(1),b(0),b(1),b(1),b(1),b(1)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="100" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_convert(HL,BL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HL,BL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="102" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="101" href="codesearch.html#HL=[[h(a),h(b)],[h(g),h(h)]]"><tt>HL=[[h(a),h(b)],[h(g),h(h)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="103" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list_convert(HL,BL)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HL,BL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="105" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="104" href="codesearch.html#HL=[[h(a),h(b)],[h(c)]]"><tt>HL=[[h(a),h(b)],[h(c)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="106" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list_convert(HL,BL)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_convert(HL,BL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="108" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="107" href="codesearch.html#BL=[[b(0),b(1),b(0),b(1),b(1),b(0),b(1),b(0)],[b(1),b(0),b(0),b(1),b(0),b(1),b(1),b(0)]]"><tt>BL=[[b(0),b(1),b(0),b(1),b(1),b(0),b(1),b(0)],[b(1),b(0),b(0),b(1),b(0),b(1),b(1),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="110" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="109" href="codesearch.html#HL=[[h(5),h(a)],[h(9),h(6)]]"><tt>HL=[[h(5),h(a)],[h(9),h(6)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="111" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_convert(HL,BL)</span> do not fail.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="get_nth_bit_from_byte/3" href="codesearch.html#get_nth_bit_from_byte/3">get_nth_bit_from_byte/3</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando BN es el N-ésimo bit del byte B.<p>El predicado utiliza dos cláusulas: <ol> <li value="1"> Si B es un byte binario, invierte el byte y obtiene el N-ésimo bit <li value="2"> Si B es un byte hexadecimal, lo convierte a binario y luego obtiene el N-ésimo bit </ol> La implementación usa el predicado byte_convert/2 para convertir el byte hexadecimal a binario, y luego usa reverse_list/2 para invertir el byte binario. El predicado get_nth_bit/3 se usa para extraer el N-ésimo bit del byte invertido.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p><span class="lpdoc-var">BN</span> es el <span class="lpdoc-var">N</span>-ésimo bit del byte <span class="lpdoc-var">B</span>. Su implementación es: <pre class="lpdoc-codeblock">get_nth_bit_from_byte(N,B,BN) :-
+    binary_byte(B),
+    reverse_list(B,RevB),
+    get_nth_bit(N,RevB,BN).
+get_nth_bit_from_byte(N,B,BN) :-
+    hex_byte(B),
+    byte_convert(B,BinB),
+    reverse_list(BinB,RevB),
+    get_nth_bit(N,RevB,BN).
+</pre></p><ul class="lpdoc-itemize-minus"></ul>
+<strong>Other properties:</strong> <br/><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="113" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="112" href="codesearch.html#N=0"><tt>N=0</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="115" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="114" href="codesearch.html#B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="117" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="116" href="codesearch.html#Bit=b(0)"><tt>Bit=b(0)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="118" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="120" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="119" href="codesearch.html#N=s(s(s(0)))"><tt>N=s(s(s(0)))</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="122" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="121" href="codesearch.html#B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="124" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="123" href="codesearch.html#Bit=b(1)"><tt>Bit=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="125" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="127" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="126" href="codesearch.html#N=s(s(s(s(s(s(s(0)))))))"><tt>N=s(s(s(s(s(s(s(0)))))))</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="129" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="128" href="codesearch.html#B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="131" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="130" href="codesearch.html#Bit=b(1)"><tt>Bit=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="132" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="134" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="133" href="codesearch.html#N=0"><tt>N=0</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="136" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="135" href="codesearch.html#B=[h(a),h(5)]"><tt>B=[h(a),h(5)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="138" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="137" href="codesearch.html#Bit=b(1)"><tt>Bit=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="139" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="141" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="140" href="codesearch.html#N=s(s(s(s(0))))"><tt>N=s(s(s(s(0))))</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="143" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="142" href="codesearch.html#B=[h(a),h(5)]"><tt>B=[h(a),h(5)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="145" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="144" href="codesearch.html#Bit=b(0)"><tt>Bit=b(0)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="146" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="148" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="147" href="codesearch.html#N=s(s(s(s(s(s(s(0)))))))"><tt>N=s(s(s(s(s(s(s(0)))))))</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="150" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="149" href="codesearch.html#B=[h(a),h(5)]"><tt>B=[h(a),h(5)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="152" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="151" href="codesearch.html#Bit=b(1)"><tt>Bit=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="153" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="155" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="154" href="codesearch.html#N=s(s(s(s(s(s(s(s(0))))))))"><tt>N=s(s(s(s(s(s(s(s(0))))))))</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="157" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="156" href="codesearch.html#B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="158" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="160" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="159" href="codesearch.html#N= -1"><tt>N= -1</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="162" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="161" href="codesearch.html#B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="163" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="165" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="164" href="codesearch.html#N=0"><tt>N=0</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="167" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="166" href="codesearch.html#B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1)]"><tt>B=[b(1),b(0),b(1),b(0),b(1),b(0),b(1)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="168" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="170" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="169" href="codesearch.html#N=0"><tt>N=0</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="172" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="171" href="codesearch.html#B=[h(a)]"><tt>B=[h(a)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="173" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="175" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="174" href="codesearch.html#N=0"><tt>N=0</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="177" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="176" href="codesearch.html#B=[h(x),h(y)]"><tt>B=[h(x),h(y)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="178" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="180" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="179" href="codesearch.html#B=[h(5),h(5)]"><tt>B=[h(5),h(5)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="182" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="181" href="codesearch.html#BN=b(1)"><tt>BN=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (undefined property)</span><span><a class="lpdoc-idx-anchor" id="183" href="codesearch.html#N=0;N=s(s(0));N=s(s(s(s(0))));N=s(s(s(s(s(s(0))))))"><tt>N=0;N=s(s(0));N=s(s(s(s(0))));N=s(s(s(s(s(s(0))))))</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="184" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,BN)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="186" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="185" href="codesearch.html#BN=b(1)"><tt>BN=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="187" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,BN)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,Bit)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="189" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="188" href="codesearch.html#B=[h(a),h(5)]"><tt>B=[h(a),h(5)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (undefined property)</span><span><a class="lpdoc-idx-anchor" id="190" href="codesearch.html#N=0,Bit=b(1);N=s(0),Bit=b(0);N=s(s(0)),Bit=b(1);N=s(s(s(0))),Bit=b(0);N=s(s(s(s(0)))),Bit=b(0);N=s(s(s(s(s(0))))),Bit=b(1);N=s(s(s(s(s(s(0)))))),Bit=b(0);N=s(s(s(s(s(s(s(0))))))),Bit=b(1)"><tt>N=0,Bit=b(1);N=s(0),Bit=b(0);N=s(s(0)),Bit=b(1);N=s(s(s(0))),Bit=b(0);N=s(s(s(s(0)))),Bit=b(0);N=s(s(s(s(s(0))))),Bit=b(1);N=s(s(s(s(s(s(0)))))),Bit=b(0);N=s(s(s(s(s(s(s(0))))))),Bit=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="191" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,Bit)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit_from_byte(N,B,Bit)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="193" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="192" href="codesearch.html#N=s(s(s(0)))"><tt>N=s(s(s(0)))</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="195" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="194" href="codesearch.html#Bit=b(1)"><tt>Bit=b(1)</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="196" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">get_nth_bit_from_byte(N,B,Bit)</span> do not fail.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="byte_list_clsh/2" href="codesearch.html#byte_list_clsh/2">byte_list_clsh/2</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando CLShL es el resultado de un desplazamiento circular a la izquierda de la lista de bytes L.<p>El predicado utiliza dos cláusulas: <ol> <li value="1"> Si L es una lista de bytes binarios, convertir la lista a bits, realizar el desplazamiento circular a la izquierda y volver a convertir a bytes. <li value="2"> Si L es una lista de bytes hexadecimales, convertir la lista a bytes binarios, realizar el desplazamiento circular a la izquierda y volver a convertir a bytes hexadecimales. </ol> La implementación utiliza el predicado bytes_to_bits/2 para convertir la lista de bytes a bits, el predicado rotate_left/2 para realizar el desplazamiento circular a la izquierda y el predicado bits_to_bytes/2 para volver a convertir los bits a bytes. El predicado byte_list_convert/2 se utiliza para convertir los bytes hexadecimales a bytes binarios.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p><span class="lpdoc-var">CLShL</span> es el resultado de aplicar un desplazamiento circular a la izquierda a la lista de bytes <span class="lpdoc-var">L</span>. Su implementación es: <pre class="lpdoc-codeblock">byte_list_clsh(L,CLShL) :-
+    bytes_to_bits(L,AllBits),
+    rotate_left(AllBits,RotatedBits),
+    bits_to_bytes(RotatedBits,CLShL).
+byte_list_clsh(L,CLShL) :-
+    byte_list_convert(L,BinList),
+    bytes_to_bits(BinList,AllBits),
+    rotate_left(AllBits,RotatedBits),
+    bits_to_bytes(RotatedBits,BinBytes),
+    byte_list_convert(CLShL,BinBytes).
+</pre></p><ul class="lpdoc-itemize-minus"></ul>
+<strong>Other properties:</strong> <br/><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="198" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="197" href="codesearch.html#L=[]"><tt>L=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="200" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="199" href="codesearch.html#CLShL=[]"><tt>CLShL=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="201" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_clsh(L,CLShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="203" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="202" href="codesearch.html#L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]"><tt>L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="205" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="204" href="codesearch.html#CLShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]"><tt>CLShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="206" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_clsh(L,CLShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="208" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="207" href="codesearch.html#L=[[h(5),h(a)]]"><tt>L=[[h(5),h(a)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="210" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="209" href="codesearch.html#CLShL=[[h(b),h(4)]]"><tt>CLShL=[[h(b),h(4)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="211" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_clsh(L,CLShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="213" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="212" href="codesearch.html#L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)],[b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(0)]]"><tt>L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)],[b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="215" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="214" href="codesearch.html#CLShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)],[b(1),b(0),b(0),b(1),b(1),b(0),b(0),b(1)]]"><tt>CLShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)],[b(1),b(0),b(0),b(1),b(1),b(0),b(0),b(1)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="216" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_clsh(L,CLShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="218" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="217" href="codesearch.html#L=[[h(5),h(a)],[h(2),h(3)],[h(5),h(5)],[h(3),h(7)]]"><tt>L=[[h(5),h(a)],[h(2),h(3)],[h(5),h(5)],[h(3),h(7)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="220" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="219" href="codesearch.html#CLShL=[[h(b),h(4)],[h(4),h(6)],[h(a),h(a)],[h(6),h(e)]]"><tt>CLShL=[[h(b),h(4)],[h(4),h(6)],[h(a),h(a)],[h(6),h(e)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="221" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_clsh(L,CLShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="223" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="222" href="codesearch.html#L=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]"><tt>L=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="225" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="224" href="codesearch.html#CLShL=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]"><tt>CLShL=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="226" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_clsh(L,CLShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_clsh(L,CLShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="228" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="227" href="codesearch.html#L=[[h(a),h(5)],[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]"><tt>L=[[h(a),h(5)],[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="229" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list_clsh(L,CLShL)</span> fail.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="byte_list_crsh/2" href="codesearch.html#byte_list_crsh/2">byte_list_crsh/2</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando CRShL es el resultado de un desplazamiento circular a la derecha de la lista de bytes L.<p>El predicado utiliza dos cláusulas: <ol> <li value="1"> Si L es una lista de bytes binarios, convertir la lista a bits, realizar el desplazamiento circular a la derecha y volver a convertir a bytes. <li value="2"> Si L es una lista de bytes hexadecimales, convertir la lista a bytes binarios, realizar el desplazamiento circular a la derecha y volver a convertir a bytes hexadecimales. </ol> La implementación utiliza el predicado bytes_to_bits/2 para convertir la lista de bytes a bits, el predicado rotate_right/2 para realizar el desplazamiento circular a la derecha y el predicado bits_to_bytes/2 para volver a convertir los bits a bytes. El predicado byte_list_convert/2 se utiliza para convertir los bytes hexadecimales a bytes binarios y viceversa.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p><span class="lpdoc-var">CRShL</span> es el resultado de aplicar un desplazamiento circular a la derecha a la lista de bytes <span class="lpdoc-var">L</span>. Su implementación es: <pre class="lpdoc-codeblock">byte_list_crsh(L,CRShL) :-
+    bytes_to_bits(L,AllBits),
+    rotate_right(AllBits,RotatedBits),
+    bits_to_bytes(RotatedBits,CRShL).
+byte_list_crsh(L,CRShL) :-
+    byte_list_convert(L,BinList),
+    bytes_to_bits(BinList,AllBits),
+    rotate_right(AllBits,RotatedBits),
+    bits_to_bytes(RotatedBits,BinBytes),
+    byte_list_convert(CRShL,BinBytes).
+</pre></p><ul class="lpdoc-itemize-minus"></ul>
+<strong>Other properties:</strong> <br/><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="231" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="230" href="codesearch.html#L=[]"><tt>L=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="233" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="232" href="codesearch.html#CRShL=[]"><tt>CRShL=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="234" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="236" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="235" href="codesearch.html#L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]"><tt>L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="238" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="237" href="codesearch.html#CRShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]"><tt>CRShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="239" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="241" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="240" href="codesearch.html#L=[[h(5),h(a)]]"><tt>L=[[h(5),h(a)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="243" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="242" href="codesearch.html#CRShL=[[h(2),h(d)]]"><tt>CRShL=[[h(2),h(d)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="244" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="246" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="245" href="codesearch.html#L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)],[b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(0)]]"><tt>L=[[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)],[b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="248" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="247" href="codesearch.html#CRShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)],[b(0),b(1),b(1),b(0),b(0),b(1),b(1),b(0)]]"><tt>CRShL=[[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)],[b(0),b(1),b(1),b(0),b(0),b(1),b(1),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="249" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="251" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="250" href="codesearch.html#L=[[h(b),h(4)],[h(4),h(6)],[h(a),h(a)],[h(6),h(e)]]"><tt>L=[[h(b),h(4)],[h(4),h(6)],[h(a),h(a)],[h(6),h(e)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="253" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="252" href="codesearch.html#CRShL=[[h(5),h(a)],[h(2),h(3)],[h(5),h(5)],[h(3),h(7)]]"><tt>CRShL=[[h(5),h(a)],[h(2),h(3)],[h(5),h(5)],[h(3),h(7)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="254" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="256" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="255" href="codesearch.html#L=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]"><tt>L=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="258" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="257" href="codesearch.html#CRShL=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]"><tt>CRShL=[[b(0),b(0),b(0),b(0),b(0),b(0),b(0),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="259" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="261" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="260" href="codesearch.html#L=[[h(f),h(f)]]"><tt>L=[[h(f),h(f)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="263" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="262" href="codesearch.html#CRShL=[[h(f),h(f)]]"><tt>CRShL=[[h(f),h(f)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="264" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_list_crsh(L,CRShL)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="266" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="265" href="codesearch.html#L=[[h(a),h(5)],[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]"><tt>L=[[h(a),h(5)],[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="267" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_list_crsh(L,CRShL)</span> fail.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="byte_xor/3" href="codesearch.html#byte_xor/3">byte_xor/3</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando B3 es el resultado de la operación XOR entre B1 y B2.<p>El predicado utiliza dos cláusulas: <ol> <li value="1"> Si B1 y B2 son bytes binarios, invertir ambos bytes, realizar la operación XOR e invertir el resultado. <li value="2"> Si B1 y B2 son bytes hexadecimales, convertirlos a binarios, realizar la operación XOR y volver a convertir el resultado a hexadecimal. </ol> La implementación utiliza byte/1 para comprobar que B1 y B2 son bytes válidos, el predicado byte_convert/2 para convertir el byte hexadecimal a binario y viceversa, el predicado reverse_list/2 para invertir los bytes y el predicado xor_list/3 para realizar la operación XOR en bits individuales.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p><span class="lpdoc-var">B3</span> es el resultado de la operación XOR entre <span class="lpdoc-var">B1</span> y <span class="lpdoc-var">B2</span>. Su implementación es: <pre class="lpdoc-codeblock">byte_xor([],[],[]).
+byte_xor(B1,B2,B3) :-
+    byte(B1),
+    byte(B2),
+    reverse_list(B1,RevB1),
+    reverse_list(B2,RevB2),
+    xor_list(RevB1,RevB2,RevB3),
+    reverse_list(RevB3,B3).
+byte_xor(B1,B2,B3) :-
+    byte(B1),
+    byte(B2),
+    byte_convert(B1,BinB1),
+    byte_convert(B2,BinB2),
+    reverse_list(BinB1,RevBinB1),
+    reverse_list(BinB2,RevBinB2),
+    xor_list(RevBinB1,RevBinB2,RevBinB3),
+    reverse_list(RevBinB3,RevB3),
+    byte_convert(B3,RevB3).
+</pre></p><ul class="lpdoc-itemize-minus"></ul>
+<strong>Other properties:</strong> <br/><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="269" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="268" href="codesearch.html#B1=[]"><tt>B1=[]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="271" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="270" href="codesearch.html#B2=[]"><tt>B2=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="273" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="272" href="codesearch.html#B3=[]"><tt>B3=[]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="274" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="276" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="275" href="codesearch.html#B1=[h(5),h(a)]"><tt>B1=[h(5),h(a)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="278" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="277" href="codesearch.html#B2=[h(2),h(3)]"><tt>B2=[h(2),h(3)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="280" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="279" href="codesearch.html#B3=[h(7),h(9)]"><tt>B3=[h(7),h(9)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="281" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="283" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="282" href="codesearch.html#B1=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B1=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="285" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="284" href="codesearch.html#B2=[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]"><tt>B2=[b(0),b(1),b(0),b(1),b(0),b(1),b(0),b(1)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="287" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="286" href="codesearch.html#B3=[b(1),b(1),b(1),b(1),b(1),b(1),b(1),b(1)]"><tt>B3=[b(1),b(1),b(1),b(1),b(1),b(1),b(1),b(1)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="288" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="290" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="289" href="codesearch.html#B1=[h(a),h(a)]"><tt>B1=[h(a),h(a)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="292" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="291" href="codesearch.html#B2=[h(5),h(5)]"><tt>B2=[h(5),h(5)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="294" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="293" href="codesearch.html#B3=[h(f),h(f)]"><tt>B3=[h(f),h(f)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="295" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="297" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="296" href="codesearch.html#B1=[h(a),h(a)]"><tt>B1=[h(a),h(a)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="299" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="298" href="codesearch.html#B2=[h(a),h(a)]"><tt>B2=[h(a),h(a)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="301" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="300" href="codesearch.html#B3=[h(0),h(0)]"><tt>B3=[h(0),h(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="302" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="304" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="303" href="codesearch.html#B1=[h(c),h(d)]"><tt>B1=[h(c),h(d)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="306" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="305" href="codesearch.html#B2=[h(0),h(0)]"><tt>B2=[h(0),h(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="308" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="307" href="codesearch.html#B3=[h(c),h(d)]"><tt>B3=[h(c),h(d)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="309" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> do not fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="311" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="310" href="codesearch.html#B1=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B1=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="313" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="312" href="codesearch.html#B2=[b(1),b(0),b(1),b(0),b(1),b(0),b(1)]"><tt>B2=[b(1),b(0),b(1),b(0),b(1),b(0),b(1)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="314" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="316" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="315" href="codesearch.html#B1=[h(a),h(a)]"><tt>B1=[h(a),h(a)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="318" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="317" href="codesearch.html#B2=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]"><tt>B2=[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="319" href="codesearch.html#fails/1"><tt>fails/1</tt></a>)</span><span>Calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> fail.
+</span>
+</ul><p><span class="lpdoc-usage-header">Test:</span><span class="lpdoc-usage-decl"><tt>byte_xor(B1,B2,B3)</tt>
+</span><p></p><ul class="lpdoc-itemize-minus"><li><em>If the following properties hold at call time:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="321" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="320" href="codesearch.html#B1=[h(5),h(5)]"><tt>B1=[h(5),h(5)]</tt></a>
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="323" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="322" href="codesearch.html#B3=[h(a),h(a)]"><tt>B3=[h(a),h(a)]</tt></a>
+</span>
+<br/><em>then the following properties should hold upon exit:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="325" href="codesearch.html#= /2"><tt>= /2</tt></a>)</span><span><a class="lpdoc-idx-anchor" id="324" href="codesearch.html#B2=[h(f),h(f)]"><tt>B2=[h(f),h(f)]</tt></a>
+</span>
+<br/><em>then the following properties should hold globally:</em>
+<br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="326" href="codesearch.html#not_fails/1"><tt>not_fails/1</tt></a>)</span><span>All the calls of the form <span class="lpdoc-var">byte_xor(B1,B2,B3)</span> do not fail.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="nibble_to_bits/2" href="codesearch.html#nibble_to_bits/2">nibble_to_bits/2</a></div><div class="lpdoc-deftext">Este predicado convierte un dígito hexadecimal (nibble) a su representación binaria de 4 bits.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>nibble_to_bits(Nibble,Bits)</tt>
+</span><p><span class="lpdoc-var">Bits</span> es la lista de 4 bits que representa al nibble hexadecimal <span class="lpdoc-var">Nibble</span>.</p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="reverse_list/2" href="codesearch.html#reverse_list/2">reverse_list/2</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando Reversed es la inversión de List.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>reverse_list(List,Reversed)</tt>
+</span><p><span class="lpdoc-var">Reversed</span> es la inversión de la lista <span class="lpdoc-var">List</span>. Su implementación es: <pre class="lpdoc-codeblock">reverse_list(List,Reversed) :-
+    reverse_acc(List,[],Reversed).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="reverse_acc/3" href="codesearch.html#reverse_acc/3">reverse_acc/3</a></div><div class="lpdoc-deftext">El predicado es cierto cuando Reversed es la concatenación de Acc y List invertida.<p>La implementación utiliza recursión de cola con dos cláusulas: <ol> <li value="1"> Caso base: Una lista vacía invertida es el acumulador actual <li value="2"> Caso recursivo: Para una lista no vacía, se añade el primer elemento al inicio del acumulador y se invierte recursivamente el resto de la lista. </ol> <p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>reverse_acc(List,Acc,Reversed)</tt>
+</span><p><span class="lpdoc-var">Reversed</span> es el resultado de invertir la lista <span class="lpdoc-var">List</span> usando <span class="lpdoc-var">Acc</span> como acumulador. Su implementación es: <pre class="lpdoc-codeblock">reverse_acc([],Acc,Acc).
+reverse_acc([X|Xs],Acc,Reversed) :-
+    reverse_acc(Xs,[X|Acc],Reversed).
+</pre></p><ul class="lpdoc-itemize-minus"><li><em>Call and exit should be compatible with:</em><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="327" href="codesearch.html#list/1"><tt>list/1</tt></a>)</span><span><span class="lpdoc-var">List</span> is a list.
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="328" href="codesearch.html#list/1"><tt>list/1</tt></a>)</span><span><span class="lpdoc-var">Acc</span> is a list.
+</span><br/><span class="lpdoc-on-right"> (<a class="lpdoc-idx-anchor" id="329" href="codesearch.html#list/1"><tt>list/1</tt></a>)</span><span><span class="lpdoc-var">Reversed</span> is a list.
+</span>
+</ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="get_nth_bit/3" href="codesearch.html#get_nth_bit/3">get_nth_bit/3</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando BN es el N-ésimo bit del byte invertido Bits.<p>La implementación utiliza recursión con dos cláusulas: <ol> <li value="1"> Caso base: Si N es 0, el primer elemento de Bits es el bit deseado. <li value="2"> Caso recursivo: Para un N distinto de cero, decrementar N y </ol> llamar recursivamente al predicado con la cola de la lista (Bits) para encontrar el siguiente bit.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>get_nth_bit(N,Bits,BN)</tt>
+</span><p><span class="lpdoc-var">BN</span> es el <span class="lpdoc-var">N</span>-ésimo bit de la lista de bits <span class="lpdoc-var">Bits</span>. Su implementación es: <pre class="lpdoc-codeblock">get_nth_bit(0,[BN|_1],BN).
+get_nth_bit(s(N),[_1|Bits],BN) :-
+    get_nth_bit(N,Bits,BN).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="my_append/3" href="codesearch.html#my_append/3">my_append/3</a></div><div class="lpdoc-deftext">Este predicado es cierto cuando Result es la concatenación de List1 y List2.<p>La implementación utiliza recursión con dos cláusulas: <ol> <li value="1"> Caso base: Una lista vacía concatenada con otra lista es la segunda lista. <li value="2"> Caso recursivo: Para una lista no vacía, anteponga el encabezado de Lista1 al resultado y concatene recursivamente el final de Lista1 con Lista2. </ol> <p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>my_append(List1,List2,Result)</tt>
+</span><p><span class="lpdoc-var">Result</span> es la concatenación de <span class="lpdoc-var">List1</span> y <span class="lpdoc-var">List2</span>. Su implementación es: <pre class="lpdoc-codeblock">my_append([],L,L).
+my_append([H|T],L,[H|R]) :-
+    my_append(T,L,R).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="bytes_to_bits/2" href="codesearch.html#bytes_to_bits/2">bytes_to_bits/2</a></div><div class="lpdoc-deftext">Este predicado convierte una lista de bytes a una lista plana de bits.<p>La implementación utiliza recursión con dos cláusulas: <ol> <li value="1"> Caso base: Una lista vacía de bits se convierte en una lista vacía de bytes. <li value="2"> Caso recursivo: Para una lista no vacía, se convierten los primeros 8 bits en un byte y el resto de los bits en bytes recursivamente. </ol> La implementación utiliza el predicado binary_byte/1 para comprobar que los primeros 8 bits formen un byte binario válido. El predicado my_append/3 se utiliza para concatenar los bits en un solo byte.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>bytes_to_bits(Bytes,Bits)</tt>
+</span><p><span class="lpdoc-var">Bits</span> es la lista plana de bits correspondiente a la lista de bytes <span class="lpdoc-var">Bytes</span>. Su implementación es: <pre class="lpdoc-codeblock">bytes_to_bits([],[]).
+bytes_to_bits([B|Bs],Bits) :-
+    binary_byte(B),
+    bytes_to_bits(Bs,RestBits),
+    my_append(B,RestBits,Bits).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="rotate_left/2" href="codesearch.html#rotate_left/2">rotate_left/2</a></div><div class="lpdoc-deftext">Este predicado realiza una rotación circular a la izquierda de una lista.<p>% La implementación utiliza dos cláusulas: % 1. Una lista vacía se rota a una lista vacía % 2. Para una lista no vacía, se añade el final de la lista al principio y se devuelve la lista rotada, utilizando el predicado my_append/3.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>rotate_left(List,Rotated)</tt>
+</span><p><span class="lpdoc-var">Rotated</span> es el resultado de rotar la lista <span class="lpdoc-var">List</span> un lugar a la izquierda. Su implementación es: <pre class="lpdoc-codeblock">rotate_left([],[]).
+rotate_left([H|T],Rotated) :-
+    my_append(T,[H],Rotated).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="bits_to_bytes/2" href="codesearch.html#bits_to_bytes/2">bits_to_bytes/2</a></div><div class="lpdoc-deftext">Este predicado convierte una lista plana de bits a una lista de bytes.<p>La implementación utiliza recursión con dos cláusulas: <ol> <li value="1"> Caso base: Una lista vacía de bits se convierte en una lista vacía de bytes. <li value="2"> Caso recursivo: Para una lista no vacía, se convierten los primeros 8 bits en un byte y el resto de los bits se convierten recursivamente en bytes. </ol> El predicado my_append/3 se utiliza para concatenar los bits en un solo byte.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>bits_to_bytes(Bits,Bytes)</tt>
+</span><p><span class="lpdoc-var">Bytes</span> es la lista de bytes formada a partir de la lista de bits <span class="lpdoc-var">Bits</span>. Su implementación es: <pre class="lpdoc-codeblock">bits_to_bytes([],[]).
+bits_to_bytes([B1,B2,B3,B4,B5,B6,B7,B8|RestBits],[H|RestBytes]) :-
+    my_append([B1,B2,B3,B4],[B5,B6,B7,B8],H),
+    bits_to_bytes(RestBits,RestBytes).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="rotate_right/2" href="codesearch.html#rotate_right/2">rotate_right/2</a></div><div class="lpdoc-deftext">Este predicado realiza una rotación circular a la derecha de una lista.<p>El predicado reverse_list/2 se usa para invertir la lista, y luego el predicado rotate_left/2 se usa para realizar el desplazamiento circular a la izquierda en la lista invertida. Finalmente, el predicado reverse_list/2 se usa nuevamente para invertir la lista rotada a su orden original.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>rotate_right(List,Rotated)</tt>
+</span><p><span class="lpdoc-var">Rotated</span> es el resultado de rotar la lista <span class="lpdoc-var">List</span> un lugar a la derecha. Su implementación es: <pre class="lpdoc-codeblock">rotate_right(L,Rotated) :-
+    reverse_list(L,Reversed),
+    rotate_left(Reversed,RotatedReversed),
+    reverse_list(RotatedReversed,Rotated).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="xor_list/3" href="codesearch.html#xor_list/3">xor_list/3</a></div><div class="lpdoc-deftext">Este predicado realiza la operación XOR bit a bit entre dos listas de bits.<p>La implementación utiliza recursión con dos cláusulas: <ol> <li value="1"> Caso base: Una lista vacía que se aplica mediante una operación XOR con otra lista vacía es una lista vacía. <li value="2"> Caso recursivo: Para una lista no vacía, se realiza la operación XOR en los primeros elementos de ambas listas y se aplica recursivamente la operación XOR al resto de las listas. </ol> El predicado xor_bits/3 se utiliza para realizar la operación XOR en bits individuales.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>xor_list(List1,List2,Result)</tt>
+</span><p><span class="lpdoc-var">Result</span> es el resultado de aplicar la operación XOR bit a bit entre <span class="lpdoc-var">List1</span> y <span class="lpdoc-var">List2</span>. Su implementación es: <pre class="lpdoc-codeblock">xor_list([],[],[]).
+xor_list([B1|Bs1],[B2|Bs2],[B3|Bs3]) :-
+    xor_bits(B1,B2,B3),
+    xor_list(Bs1,Bs2,Bs3).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+<div><div class="lpdoc-defname"><span class="lpdoc-predtag">PREDICATE</span><a class="lpdoc-idx-anchor" id="xor_bits/3" href="codesearch.html#xor_bits/3">xor_bits/3</a></div><div class="lpdoc-deftext">Este predicado realiza la operación XOR entre dos bits.<p><span class="lpdoc-usage-header">Usage:</span><span class="lpdoc-usage-decl"><tt>xor_bits(B1,B2,B3)</tt>
+</span><p><span class="lpdoc-var">B3</span> es el resultado de la operación XOR entre los bits <span class="lpdoc-var">B1</span> y <span class="lpdoc-var">B2</span>. Su implementación es: <pre class="lpdoc-codeblock">xor_bits(b(0),b(0),b(0)).
+xor_bits(b(0),b(1),b(1)).
+xor_bits(b(1),b(0),b(1)).
+xor_bits(b(1),b(1),b(0)).
+</pre></p><ul class="lpdoc-itemize-minus"></ul></div></div><p>
+</div><div id="Documentation on imports"><h2>Documentation on imports</h2>This module has the following direct dependencies:<ul class="lpdoc-itemize-minus"><li><em>Internal (engine) modules:</em><br/><a class="lpdoc-idx-anchor" id="330" href="codesearch.html#term_basic"><tt>term_basic</tt></a>, <a class="lpdoc-idx-anchor" id="331" href="codesearch.html#basiccontrol"><tt>basiccontrol</tt></a>, <a class="lpdoc-idx-anchor" id="332" href="codesearch.html#debugger_support"><tt>debugger_support</tt></a>, <a class="lpdoc-idx-anchor" id="333" href="codesearch.html#basic_props"><tt>basic_props</tt></a>.
+<li><em>Packages:</em><br/><a class="lpdoc-idx-anchor" id="334" href="codesearch.html#pure"><tt>pure</tt></a>, <a class="lpdoc-idx-anchor" id="335" href="codesearch.html#initial"><tt>initial</tt></a>, <a class="lpdoc-idx-anchor" id="336" href="codesearch.html#condcomp"><tt>condcomp</tt></a>, <a class="lpdoc-idx-anchor" id="337" href="codesearch.html#assertions"><tt>assertions</tt></a>, <a class="lpdoc-idx-anchor" id="338" href="codesearch.html#assertions/assertions_basic"><tt>assertions/assertions_basic</tt></a>, <a class="lpdoc-idx-anchor" id="339" href="codesearch.html#regtypes"><tt>regtypes</tt></a>.
+</ul></div><div class="lpdoc-footer">Generated with LPdoc using Ciao</div></div><div class="lpdoc-clearer"></div></div></body></html>

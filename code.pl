@@ -1,24 +1,111 @@
 :- module(_,_,[pure,assertions,regtypes]).
 
-% AUTHOR INFORMATION
+% Command to generate documentation
+% lpdoc -t html --doc_mainopts=tests code.pl
+
+:- doc(title, "Práctica 1: Programación Lógica Pura").
+
+:- doc(author_data/4, "Define los datos del autor del módulo").
+
 author_data('Dobra','','Mihai','240912').
+
+:- doc(module, "
+@section{Introducción}
+
+Este módulo implementa operaciones básicas para trabajar con bytes en diferentes 
+representaciones. Los bytes pueden representarse en formato binario (como 8 bits) 
+o en formato hexadecimal (como 2 dígitos hexadecimales).
+
+@section{Representación de datos}
+
+El módulo utiliza dos representaciones principales para los bytes:
+
+@begin{itemize}
+  @item @bf{Bytes binarios}: Representados como listas de 8 bits. Cada bit es una 
+        estructura b(0) o b(1).
+  @item @bf{Bytes hexadecimales}: Representados como listas de 2 dígitos hexadecimales.
+        Cada dígito es una estructura h(X) donde X es un valor entre 0 y f.
+@end{itemize}
+
+@section{Funcionalidades}
+
+El módulo implementa las siguientes funcionalidades:
+
+@begin{enumerate}
+  @item Verificación de listas de bytes
+  @item Conversión entre representaciones binarias y hexadecimales
+  @item Obtención de un bit específico de un byte
+  @item Desplazamiento circular a la izquierda de listas de bytes
+  @item Desplazamiento circular a la derecha de listas de bytes
+  @item Operación XOR entre bytes
+@end{enumerate}
+
+
+@section{Ejemplos de uso}
+
+A continuación, se presenta un ejemplo de cada funcionalidad principal del módulo.
+
+@bf{Verificación de lista de bytes:}
+@begin{verbatim}
+?- byte_list([[h(a),h(5)], [b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(0)]]).
+false.
+@end{verbatim}
+
+@bf{Conversión entre representaciones:}
+@begin{verbatim}
+?- byte_convert([h(5),h(a)], BinByte).
+BinByte = [b(0),b(1),b(0),b(1),b(1),b(0),b(1),b(0)]
+@end{verbatim}
+
+@bf{Conversión de listas de bytes:}
+@begin{verbatim}
+?- byte_list_convert([[h(a),h(b)],[h(c),h(d)]], BinList).
+BinList = [[b(1),b(0),b(1),b(0),b(1),b(0),b(1),b(1)],
+           [b(1),b(1),b(0),b(0),b(1),b(1),b(0),b(1)]]
+@end{verbatim}
+
+@bf{Obtener bits específicos:}
+@begin{verbatim}
+?- get_nth_bit_from_byte(s(s(s(0))), [h(5),h(a)], Bit).
+Bit = b(0)
+@end{verbatim}
+
+@bf{Desplazamiento circular a la izquierda:}
+@begin{verbatim}
+?- byte_list_clsh([[h(5),h(a)], [h(2),h(3)]], CLShL).
+CLShL = [[h(b),h(4)], [h(4),h(6)]]
+@end{verbatim}
+
+@bf{Desplazamiento circular a la derecha:}
+@begin{verbatim}
+?- byte_list_crsh([[h(b),h(4)], [h(4),h(6)]], CRShL).
+CRShL = [[h(5),h(a)], [h(2),h(3)]]
+@end{verbatim}
+
+@bf{Operación XOR entre bytes:}
+@begin{verbatim}
+?- byte_xor([h(a),h(5)], [h(5),h(a)], Result).
+Result = [h(f),h(f)]
+@end{verbatim}
+").
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Type definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% @pred bit(B)
-% @arg B A binary bit represented as b(0) or b(1)
-% Defines the binary bit type. A bit can only be 0 or 1, represented
-% structurally as b(0) or b(1).
+:- doc(bit/1, "Define el tipo bit binario. Un bit solo puede ser 0 o 1, 
+                representado estructuralmente como b(0) o b(1).").
+
+:- regtype bit(B) # "@var{B} es un bit binario representado como b(0) o b(1).".
+
 bit(b(0)).
 bit(b(1)).
 
-% @pred binary_byte(B)
-% @arg B A list of 8 bits, from most significant bit (position 7) to least significant (position 0)
-% Defines a binary byte as an ordered list of 8 binary bits.
-% The first element is the most significant bit (position 7),
-% and the last element is the least significant bit (position 0).
+:- doc(binary_byte/1, "Define un byte binario como una lista ordenada de 8 bits.
+                       El primer elemento es el bit más significativo (posición 7),
+                       y el último elemento es el bit menos significativo (posición 0).").
+
+:- regtype binary_byte(B) # "@var{B} es una lista de 8 bits, del bit más significativo (posición 7) al menos significativo (posición 0).".
 
 binary_byte([B7 , B6 , B5 , B4 , B3 , B2 , B1 , B0]) :-
     bit(B7),
@@ -30,12 +117,11 @@ binary_byte([B7 , B6 , B5 , B4 , B3 , B2 , B1 , B0]) :-
     bit(B1),
     bit(B0).
 
-% @pred hexd(H)
-% @arg H A hexadecimal digit (nibble) represented structurally as h(X)
-% Defines a hexadecimal digit (nibble) type.
-% Each hex digit represents a 4-bit value (0-15).
-% Note that while we use numeric constants (0-9) and alphabetic constants (a-f),
-% they are treated as symbolic constants, not as decimal numbers.
+:- doc(hexd/1, "Define un dígito hexadecimal (nibble). Cada dígito hex representa un valor 
+                de 4 bits (0-15). Aunque usamos constantes numéricas (0-9) y alfabéticas (a-f),
+                se tratan como constantes simbólicas, no como números decimales.").
+
+:- regtype hexd(H) # "@var{H} es un dígito hexadecimal (nibble) representado estructuralmente como h(X).".
 
 hexd(h(0)).
 hexd(h(1)).
@@ -54,20 +140,20 @@ hexd(h(d)).
 hexd(h(e)).
 hexd(h(f)).
 
-% @pred hex_byte(B)
-% @arg B A list of 2 hex digits (nibbles), from most significant (position 1) to least significant (position 0)
-% Defines a hexadecimal byte as an ordered list of 2 hex digits (nibbles).
-% The first element is the most significant nibble (position 1),
-% and the second element is the least significant nibble (position 0).
+:- doc(hex_byte/1, "Define un byte hexadecimal como una lista ordenada de 2 dígitos hexadecimales.
+                    El primer elemento es el nibble más significativo (posición 1),
+                    y el segundo elemento es el nibble menos significativo (posición 0).").
+
+:- regtype hex_byte(B) # "@var{B} es una lista de 2 dígitos hexadecimales, del más significativo (posición 1) al menos significativo (posición 0).".
 
 hex_byte([H1, H0]) :-
     hexd(H1),
     hexd(H0).
 
-% @pred byte(B)
-% @arg B Either a binary byte or a hexadecimal byte
-% Defines the byte type as either a binary byte or a hexadecimal byte.
-% This abstraction allows for multiple representations of the same concept.
+:- doc(byte/1, "Define el tipo byte como un byte binario o un byte hexadecimal.
+                Esta abstracción permite múltiples representaciones del mismo concepto.").
+
+:- regtype byte(B) # "@var{B} es un byte, ya sea en formato binario o hexadecimal.".
 
 byte(BB) :-
     binary_byte(BB).
@@ -82,17 +168,17 @@ byte(HB) :-
 % Predicate 1: byte_list/1
 %--------------------------------------------
 
-% @pred byte_list(L)
-% @arg L A list of bytes (either binary or hexadecimal)
+:- doc(section, main_predicates).
+:- doc(byte_list/1, "Este predicado es cierto cuando L es una lista válida de bytes.
+                     Cada elemento de la lista debe ser un byte binario (8 bits) 
+                     o un byte hexadecimal (2 nibbles).
+La implementación utiliza recursión con dos cláusulas:
+ 1. Caso base: Una lista vacía es una lista de bytes válida
+ 2. Caso recursivo: Para una lista no vacía, verifique que el primer elemento
+ sea un byte válido y que el resto de la lista sea una lista de bytes válida").
 
-% This predicate is true when L is a list of valid bytes.
-% Each element of the list must be either a binary byte (8 bits)
-% or a hexadecimal byte (2 nibbles).
-
-% The implementation uses recursion with two clauses:
-% 1. Base case: An empty list is a valid byte list
-% 2. Recursive case: For a non-empty list, check that the first element
-%    is a valid byte and that the rest of the list is a valid byte list
+:- pred byte_list(L) # "@var{L} es una lista de bytes (binarios o hexadecimales).
+                        Su implementación es: @includedef{byte_list/1}".
 
 byte_list([]).                        
 byte_list([B|Bs]) :-                  
@@ -103,15 +189,15 @@ byte_list([B|Bs]) :-
 % Predicate 2: byte_convert/2
 %--------------------------------------------
 
-% @pred byte_convert(HexByte, BinByte)
-% @arg HexByte A hexadecimal byte represented as a list of two hex digits
-% @arg BinByte A binary byte represented as a list of eight bits
+:- doc(section, main_predicates).
+:- doc(byte_convert/2, "Este predicado es cierto cuando HexByte (en hexadecimal) representa
+                        el mismo valor que BinByte (en binario).
+La implementación convierte cada dígito hexadecimal en su representación binaria de 4 bits y
+luego concatena estos bits para formar el byte binario completo de 8 bits.").
 
-% This predicate is true when HexByte (in hexadecimal) represents
-% the same value as BinByte (in binary).
-
-% The implementation converts each hex digit to its 4-bit binary representation
-% and then concatenates these bits to form the complete 8-bit binary byte.
+:- pred byte_convert(HexByte, BinByte) :: hex_byte * binary_byte
+   # "@var{HexByte} es un byte hexadecimal y @var{BinByte} es su representación binaria equivalente.
+      Su implementación es: @includedef{byte_convert/2}".
 
 byte_convert([H1, H0], BinByte) :-
     hex_byte([H1, H0]),
@@ -124,16 +210,16 @@ byte_convert([H1, H0], BinByte) :-
 % Predicate 3: byte_list_convert/2
 %--------------------------------------------
 
-% @pred byte_list_convert(HexList, BinList)
-% @arg HexList A list of hexadecimal bytes (each represented as a list of two hex digits)
-% @arg BinList A list of binary bytes (each represented as a list of eight bits)
+:- doc(section, main_predicates).
+:- doc(byte_list_convert/2, "Este predicado es cierto cuando HexList (una lista de bytes hexadecimales)
+                             representa el mismo valor que BinList (una lista de bytes binarios).
+La implementación utiliza recursión con dos cláusulas:
+ 1. Caso base: Una lista vacía de bytes hexadecimales se convierte en una lista vacía de bytes binarios.
+ 2. Caso recursivo: Para una lista no vacía, se convierte el primer byte hexadecimal a su representación binaria y se convierte recursivamente el resto de la lista.").
 
-% This predicate is true when HexList (a list of hexadecimal bytes)
-% represents the same value as BinList (a list of binary bytes).
-
-% The implementation uses recursion wtith two clauses:
-% 1. Base case: An empty list of hexadecimal bytes is converted to an empty list of binary bytes
-% 2. Recursive case: For a non-empty list, convert the first hexadecimal byte to its binary representation and recursively convert the rest of the list
+:- pred byte_list_convert(HexList, BinList) 
+   # "@var{HexList} es una lista de bytes hexadecimales y @var{BinList} es su representación binaria equivalente.
+      Su implementación es: @includedef{byte_list_convert/2}".
 
 byte_list_convert([],[]).
 byte_list_convert([H|Hs], [B|Bs]) :-
@@ -144,19 +230,20 @@ byte_list_convert([H|Hs], [B|Bs]) :-
 % Predicate 4: get_nth_bit_from_byte/3
 %--------------------------------------------
 
-% @pred get_nth_bit_from_byte(N, B, BN)
-% @arg N A Peano number representing the position of the bit (0-7)
-% @arg B A byte (either binary or hexadecimal)
-% @arg BN The N-th bit of the byte B
+:- doc(section, main_predicates).
+:- doc(get_nth_bit_from_byte/3, "Este predicado es cierto cuando BN es el N-ésimo bit del byte B.
 
-% This predicate is true when BN is the N-th bit of the byte B.
-% The predicate uses two clauses:
-% 1. If B is a binary byte, reverse the byte and get the N-th bit
-% 2. If B is a hexadecimal byte, convert it to binary and then get the N-th bit
+El predicado utiliza dos cláusulas:
+ 1. Si B es un byte binario, invierte el byte y obtiene el N-ésimo bit
+ 2. Si B es un byte hexadecimal, lo convierte a binario y luego obtiene el N-ésimo bit
 
-% The implementation uses the byte_convert/2 predicate to convert the hexadecimal byte to binary,
-% and then uses reverse_list/2 to reverse the binary byte.
-% The get_nth_bit/3 predicate is used to extract the N-th bit from the reversed byte.
+La implementación usa el predicado byte_convert/2 para convertir el byte hexadecimal a binario,
+y luego usa reverse_list/2 para invertir el byte binario.
+El predicado get_nth_bit/3 se usa para extraer el N-ésimo bit del byte invertido.").
+
+:- pred get_nth_bit_from_byte(N, B, BN) 
+   # "@var{BN} es el @var{N}-ésimo bit del byte @var{B}.
+      Su implementación es: @includedef{get_nth_bit_from_byte/3}".
 
 get_nth_bit_from_byte(N, B, BN) :-
     binary_byte(B),
@@ -172,19 +259,20 @@ get_nth_bit_from_byte(N, B, BN) :-
 % Predicate 5:  byte_list_clsh/2
 %--------------------------------------------
 
-% @pred byte_list_clsh(L, CLShL)
-% @arg L A list of bytes (either binary or hexadecimal)
-% @arg CLShL A list of bytes (either binary or hexadecimal) after a circular left shift
+:- doc(section, main_predicates).
+:- doc(byte_list_clsh/2, "Este predicado es cierto cuando CLShL es el resultado de un 
+                         desplazamiento circular a la izquierda de la lista de bytes L.
 
-% This predicate is true when CLShL is the result of a circular left shift of the list of bytes L.
-% The predicate uses two clauses:
-% 1. If L is a list of binary bytes, convert the list to bits, perform the circular left shift, and convert back to bytes
-% 2. If L is a list of hexadecimal bytes, convert the list to binary bytes, perform the circular left shift, and convert back to hexadecimal bytes
+El predicado utiliza dos cláusulas:
+1. Si L es una lista de bytes binarios, convertir la lista a bits, realizar el desplazamiento circular a la izquierda y volver a convertir a bytes.
+2. Si L es una lista de bytes hexadecimales, convertir la lista a bytes binarios, realizar el desplazamiento circular a la izquierda y volver a convertir a bytes hexadecimales.
 
-% The implementation uses the bytes_to_bits/2 predicate to convert the list of bytes to bits,
-% the rotate_left/2 predicate to perform the circular left shift, and the bits_to_bytes/2 predicate
-% to convert the bits back to bytes.
-% The byte_list_convert/2 predicate is used to convert the hexadecimal bytes to binary bytes.
+La implementación utiliza el predicado bytes_to_bits/2 para convertir la lista de bytes a bits, el predicado rotate_left/2 para realizar el desplazamiento circular a la izquierda y el predicado bits_to_bytes/2 para volver a convertir los bits a bytes.
+El predicado byte_list_convert/2 se utiliza para convertir los bytes hexadecimales a bytes binarios.").
+
+:- pred byte_list_clsh(L, CLShL) 
+   # "@var{CLShL} es el resultado de aplicar un desplazamiento circular a la izquierda a la lista de bytes @var{L}.
+      Su implementación es: @includedef{byte_list_clsh/2}".
 
 byte_list_clsh(L, CLShL):-
    bytes_to_bits(L, AllBits),
@@ -201,19 +289,20 @@ byte_list_clsh(L, CLShL):-
 % Predicate 6: byte_list_crsh/2
 %--------------------------------------------
 
-% @pred byte_list_crsh(L, CRShL)
-% @arg L A list of bytes (either binary or hexadecimal)
-% @arg CRShL A list of bytes (either binary or hexadecimal) after a circular right shift
+:- doc(section, main_predicates).
+:- doc(byte_list_crsh/2, "Este predicado es cierto cuando CRShL es el resultado de un 
+                         desplazamiento circular a la derecha de la lista de bytes L.
 
-% This predicate is true when CRShL is the result of a circular right shift of the list of bytes L.
-% The predicate uses two clauses:
-% 1. If L is a list of binary bytes, convert the list to bits, perform the circular right shift, and convert back to bytes
-% 2. If L is a list of hexadecimal bytes, convert the list to binary bytes, perform the circular right shift, and convert back to hexadecimal bytes
+El predicado utiliza dos cláusulas:
+1. Si L es una lista de bytes binarios, convertir la lista a bits, realizar el desplazamiento circular a la derecha y volver a convertir a bytes.
+2. Si L es una lista de bytes hexadecimales, convertir la lista a bytes binarios, realizar el desplazamiento circular a la derecha y volver a convertir a bytes hexadecimales.
 
-% The implementation uses the bytes_to_bits/2 predicate to convert the list of bytes to bits,
-% the rotate_right/2 predicate to perform the circular right shift, and the bits_to_bytes/2 predicate
-% to convert the bits back to bytes.
-% The byte_list_convert/2 predicate is used to convert the hexadecimal bytes to binary bytes and vice versa.
+La implementación utiliza el predicado bytes_to_bits/2 para convertir la lista de bytes a bits, el predicado rotate_right/2 para realizar el desplazamiento circular a la derecha y el predicado bits_to_bytes/2 para volver a convertir los bits a bytes.
+El predicado byte_list_convert/2 se utiliza para convertir los bytes hexadecimales a bytes binarios y viceversa.").
+
+:- pred byte_list_crsh(L, CRShL) 
+   # "@var{CRShL} es el resultado de aplicar un desplazamiento circular a la derecha a la lista de bytes @var{L}.
+      Su implementación es: @includedef{byte_list_crsh/2}".
 
 byte_list_crsh(L, CRShL):-
    bytes_to_bits(L, AllBits),
@@ -230,18 +319,19 @@ byte_list_crsh(L, CRShL):-
 % Predicate 7: byte_xor/3
 %--------------------------------------------
 
-% @pred byte_xor(B1, B2, B3)
-% @arg B1 The first byte (either binary or hexadecimal)
-% @arg B2 The second byte (either binary or hexadecimal)
-% @arg B3 The result of the XOR operation between B1 and B2
+:- doc(section, main_predicates).
+:- doc(byte_xor/3, "Este predicado es cierto cuando B3 es el resultado de la operación XOR entre B1 y B2.
 
-% This predicate is true when B3 is the result of the XOR operation between B1 and B2.
-% The predicate uses two clauses:
-% 1. If B1 and B2 are binary bytes, reverse both bytes, perform the XOR operation, and reverse the result
-% 2. If B1 and B2 are hexadecimal bytes, convert them to binary, perform the XOR operation, and convert the result back to hexadecimal
+El predicado utiliza dos cláusulas:
+1. Si B1 y B2 son bytes binarios, invertir ambos bytes, realizar la operación XOR e invertir el resultado.
+2. Si B1 y B2 son bytes hexadecimales, convertirlos a binarios, realizar la operación XOR y volver a convertir el resultado a hexadecimal.
 
-% The implementation uses byte/1 to check that B1 and B2 are valid bytes, the byte_convert/2 predicate to convert the hexadecimal byte to binary byte and vice versa,
-% the reverse_list/2 predicate to reverse the bytes, and the xor_list/3 predicate to perform the XOR operation on individual bits
+La implementación utiliza byte/1 para comprobar que B1 y B2 son bytes válidos, el predicado byte_convert/2 para convertir el byte hexadecimal a binario y viceversa,
+el predicado reverse_list/2 para invertir los bytes y el predicado xor_list/3 para realizar la operación XOR en bits individuales.").
+
+:- pred byte_xor(B1, B2, B3) 
+   # "@var{B3} es el resultado de la operación XOR entre @var{B1} y @var{B2}.
+      Su implementación es: @includedef{byte_xor/3}".
 
 byte_xor([], [], []).
 byte_xor(B1, B2, B3):-
@@ -270,12 +360,12 @@ byte_xor(B1, B2, B3):-
 % Auxiliaries for byte_convert/2
 %--------------------------------------------
 
-% @pred nibble_to_bits(Nibble, Bits) 
-% @arg Nibble A hexadecimal digit (0-f)
-% @arg Bits List of 4 bits representing the nibble
+:- doc(section, auxiliary_predicates).
+:- doc(nibble_to_bits/2, "Este predicado convierte un dígito hexadecimal (nibble) a su 
+                          representación binaria de 4 bits.").
 
-% This predicate converts a hexadecimal digit (nibble) to its 4-bit binary representation.
-% Each hex digit maps to a unique pattern of 4 bits.
+:- pred nibble_to_bits(Nibble, Bits) 
+   # "@var{Bits} es la lista de 4 bits que representa al nibble hexadecimal @var{Nibble}.".
 
 nibble_to_bits(h(0), [b(0), b(0), b(0), b(0)]).
 nibble_to_bits(h(1), [b(0), b(0), b(0), b(1)]).
@@ -298,53 +388,58 @@ nibble_to_bits(h(f), [b(1), b(1), b(1), b(1)]).
 % Auxiliaries for get_nth_bit_from_byte/3
 %--------------------------------------------
 
-% @pred reverse_list(List, Reversed)
-% @arg List A list to be reversed
-% @arg Reversed The reversed version of the list
+:- doc(section, auxiliary_predicates).
+:- doc(reverse_list/2, "Este predicado es cierto cuando Reversed es la inversión de List.").
 
-% This predicate is true when Reversed is the reverse of List.
-% The implementation uses an accumulator to build the reversed list.
+:- pred reverse_list(List, Reversed) 
+   # "@var{Reversed} es la inversión de la lista @var{List}.
+      Su implementación es: @includedef{reverse_list/2}".
 
 reverse_list(List, Reversed) :-
     reverse_acc(List, [], Reversed).
 
-% @pred reverse_acc(List, Acc, Reversed)
-% @arg List A list to be reversed
-% @arg Acc An accumulator for building the reversed list
-% @arg Reversed The reversed version of the list
+:- doc(section, auxiliary_predicates).
+:- doc(reverse_acc/3, "El predicado es cierto cuando Reversed es la concatenación de Acc y List invertida.
 
-% This predicate is true when the accumulator Acc contains the reversed version of List.
-% The implementation uses tail recursion with two clauses:
-% 1. Base case: An empty list is reversed to the accumulator
-% 2. Recursive case: For a non-empty list, prepend the head of the list to the accumulator and recursively reverse the tail of the list.
+La implementación utiliza recursión de cola con dos cláusulas:
+ 1. Caso base: Una lista vacía invertida es el acumulador actual
+ 2. Caso recursivo: Para una lista no vacía, se añade el primer elemento al inicio del
+    acumulador y se invierte recursivamente el resto de la lista.").
+
+:- pred reverse_acc(List, Acc, Reversed) :: list * list * list
+   # "@var{Reversed} es el resultado de invertir la lista @var{List} usando @var{Acc} como acumulador.
+      Su implementación es: @includedef{reverse_acc/3}".
 
 reverse_acc([], Acc, Acc).
 reverse_acc([X|Xs], Acc, Reversed) :-
     reverse_acc(Xs, [X|Acc], Reversed).
 
-% @pred get_nth_bit(N, Bits, BN)
-% @arg N A Peano number representing the position of the bit (0-7)
-% @arg Bits A list of bits (binary byte)
-% @arg BN The N-th bit of the byte
+:- doc(section, auxiliary_predicates).
+:- doc(get_nth_bit/3, "Este predicado es cierto cuando BN es el N-ésimo bit del byte invertido Bits.
 
-% This predicate is true when BN is the N-th bit of the inversed byte Bits.
-% The implementation uses recursion with two clauses:
-% 1. Base case: If N is 0, the first element of Bits is the desired bit
-% 2. Recursive case: For a non-zero N, decrement N and recursively call the predicate with the tail of the list (Bits) to find the next bit.
+La implementación utiliza recursión con dos cláusulas:
+ 1. Caso base: Si N es 0, el primer elemento de Bits es el bit deseado.
+ 2. Caso recursivo: Para un N distinto de cero, decrementar N y
+ llamar recursivamente al predicado con la cola de la lista (Bits) para encontrar el siguiente bit.").
+
+:- pred get_nth_bit(N, Bits, BN) 
+   # "@var{BN} es el @var{N}-ésimo bit de la lista de bits @var{Bits}.
+      Su implementación es: @includedef{get_nth_bit/3}".
 
 get_nth_bit(0, [BN|_], BN).
 get_nth_bit(s(N), [_|Bits], BN) :-
     get_nth_bit(N, Bits, BN).
 
-% @pred my_append(List1, List2, Result)
-% @arg List1 The first list
-% @arg List2 The second list
-% @arg Result The concatenation of List1 and List2
+:- doc(section, auxiliary_predicates).
+:- doc(my_append/3, "Este predicado es cierto cuando Result es la concatenación de List1 y List2.
 
-% This predicate is true when Result is the concatenation of List1 and List2.
-% The implementation uses recursion with two clauses:
-% 1. Base case: An empty list concatenated with another list is the second list
-% 2. Recursive case: For a non-empty list, prepend the head of List1 to the result and recursively concatenate the tail of List1 with List2.
+La implementación utiliza recursión con dos cláusulas:
+ 1. Caso base: Una lista vacía concatenada con otra lista es la segunda lista.
+ 2. Caso recursivo: Para una lista no vacía, anteponga el encabezado de Lista1 al resultado y concatene recursivamente el final de Lista1 con Lista2.").
+
+:- pred my_append(List1, List2, Result) 
+   # "@var{Result} es la concatenación de @var{List1} y @var{List2}.
+      Su implementación es: @includedef{my_append/3}".
 
 my_append([], L, L).
 my_append([H|T], L, [H|R]) :-
@@ -354,17 +449,19 @@ my_append([H|T], L, [H|R]) :-
 % Auxiliaries for byte_list_clsh/2
 %---------------------------------------------
 
-% @pred bits_to_bytes(Bits, Bytes)
-% @arg Bits A list of bits (binary bytes)
-% @arg Bytes A list of bytes (binary bytes)
+:- doc(section, auxiliary_predicates).
+:- doc(bytes_to_bits/2, "Este predicado convierte una lista de bytes a una lista plana de bits.
 
-% This predicate is true when Bytes is the list of bytes represented by Bits.
-% The implementation uses recursion with two clauses:
-% 1. Base case: An empty list of bits is converted to an empty list of bytes
-% 2. Recursive case: For a non-empty list, convert the first 8 bits to a byte and recursively convert the rest of the bits to bytes.
+La implementación utiliza recursión con dos cláusulas:
+1. Caso base: Una lista vacía de bits se convierte en una lista vacía de bytes.
+2. Caso recursivo: Para una lista no vacía, se convierten los primeros 8 bits en un byte y el resto de los bits en bytes recursivamente.
 
-% The implementation uses the binary_byte/1 predicate to check that the first 8 bits form a valid binary byte.
-% The my_append/3 predicate is used to concatenate the bits into a single byte.
+La implementación utiliza el predicado binary_byte/1 para comprobar que los primeros 8 bits formen un byte binario válido.
+El predicado my_append/3 se utiliza para concatenar los bits en un solo byte.").
+
+:- pred bytes_to_bits(Bytes, Bits) 
+   # "@var{Bits} es la lista plana de bits correspondiente a la lista de bytes @var{Bytes}.
+      Su implementación es: @includedef{bytes_to_bits/2}".
 
 bytes_to_bits([], []).
 bytes_to_bits([B|Bs], Bits) :-
@@ -372,29 +469,33 @@ bytes_to_bits([B|Bs], Bits) :-
    bytes_to_bits(Bs, RestBits),
    my_append(B, RestBits, Bits).
 
-% @pred rotate_left(List, Rotated)
-% @arg List A list of bits
-% @arg Rotated The list of bits after a circular left shift
+:- doc(section, auxiliary_predicates).
+:- doc(rotate_left/2, "Este predicado realiza una rotación circular a la izquierda de una lista.
 
-% This predicate is true when Rotated is the result of a circular left shift of List.
-% The implementation uses two clauses:
-% 1. An empty list is rotated to an empty list
-% 2. For a non-empty list, append the tail of the list to the head and return the rotated list, using the my_append/3 predicate.
+% La implementación utiliza dos cláusulas:
+% 1. Una lista vacía se rota a una lista vacía
+% 2. Para una lista no vacía, se añade el final de la lista al principio y se devuelve la lista rotada, utilizando el predicado my_append/3.").
+
+:- pred rotate_left(List, Rotated) 
+   # "@var{Rotated} es el resultado de rotar la lista @var{List} un lugar a la izquierda.
+      Su implementación es: @includedef{rotate_left/2}".
 
 rotate_left([], []).
 rotate_left([H|T], Rotated) :-
    my_append(T, [H], Rotated).
 
-% @pred bits_to_bytes(Bits, Bytes)
-% @arg Bits A list of bits
-% @arg Bytes A list of binary bytes
+:- doc(section, auxiliary_predicates).
+:- doc(bits_to_bytes/2, "Este predicado convierte una lista plana de bits a una lista de bytes.
 
-% This predicate is true when Bytes is the list of bytes represented by Bits.
-% The implementation uses recursion with two clauses:
-% 1. Base case: An empty list of bits is converted to an empty list of bytes
-% 2. Recursive case: For a non-empty list, convert the first 8 bits to a byte and recursively convert the rest of the bits to bytes.
+La implementación utiliza recursión con dos cláusulas:
+1. Caso base: Una lista vacía de bits se convierte en una lista vacía de bytes.
+2. Caso recursivo: Para una lista no vacía, se convierten los primeros 8 bits en un byte y el resto de los bits se convierten recursivamente en bytes.
 
-% The my_append/3 predicate is used to concatenate the bits into a single byte.
+El predicado my_append/3 se utiliza para concatenar los bits en un solo byte.").
+
+:- pred bits_to_bytes(Bits, Bytes) 
+   # "@var{Bytes} es la lista de bytes formada a partir de la lista de bits @var{Bits}.
+      Su implementación es: @includedef{bits_to_bytes/2}".
 
 bits_to_bytes([], []).
 bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
@@ -405,14 +506,16 @@ bits_to_bytes([B1, B2, B3, B4, B5, B6, B7, B8|RestBits], [H|RestBytes]) :-
 % Auxiliaries for byte_list_crsh/2
 %---------------------------------------------
 
-% @pred rotate_right(List, Rotated)
-% @arg List A list of bits
-% @arg Rotated The list of bits after a circular right shift
+:- doc(section, auxiliary_predicates).
+:- doc(rotate_right/2, "Este predicado realiza una rotación circular a la derecha de una lista.
 
-% This predicate is true when Rotated is the result of a circular right shift of List.
-% The reverse_list/2 predicate is used to reverse the list,
-% and then the rotate_left/2 predicate is used to perform the circular left shift on the reversed list.
-% Finally, the reverse_list/2 predicate is used again to reverse the rotated list back to its original order.
+El predicado reverse_list/2 se usa para invertir la lista,
+y luego el predicado rotate_left/2 se usa para realizar el desplazamiento circular a la izquierda en la lista invertida.
+Finalmente, el predicado reverse_list/2 se usa nuevamente para invertir la lista rotada a su orden original.").
+
+:- pred rotate_right(List, Rotated) 
+   # "@var{Rotated} es el resultado de rotar la lista @var{List} un lugar a la derecha.
+      Su implementación es: @includedef{rotate_right/2}".
 
 rotate_right(L, Rotated) :-
    reverse_list(L, Reversed),
@@ -423,30 +526,30 @@ rotate_right(L, Rotated) :-
 % Auxiliaries for byte_xor/3
 %---------------------------------------------
 
-% @pred xor_list(List1, List2, Result)
-% @arg List1 The first list of bits
-% @arg List2 The second list of bits
-% @arg Result The result of the XOR operation between List1 and List2
+:- doc(section, auxiliary_predicates).
+:- doc(xor_list/3, "Este predicado realiza la operación XOR bit a bit entre dos listas de bits.
 
-% This predicate is true when Result is the result of the XOR operation between List1 and List2.
-% The implementation uses recursion with two clauses:
-% 1. Base case: An empty list XORed with another empty list is an empty list
-% 2. Recursive case: For a non-empty list, perform the XOR operation on the first elements of both lists and recursively XOR the rest of the lists.
+La implementación utiliza recursión con dos cláusulas:
+1. Caso base: Una lista vacía que se aplica mediante una operación XOR con otra lista vacía es una lista vacía.
+2. Caso recursivo: Para una lista no vacía, se realiza la operación XOR en los primeros elementos de ambas listas y se aplica recursivamente la operación XOR al resto de las listas.
 
-% The xor_bits/3 predicate is used to perform the XOR operation on individual bits.
+El predicado xor_bits/3 se utiliza para realizar la operación XOR en bits individuales.").
+
+:- pred xor_list(List1, List2, Result) 
+   # "@var{Result} es el resultado de aplicar la operación XOR bit a bit entre @var{List1} y @var{List2}.
+      Su implementación es: @includedef{xor_list/3}".
 
 xor_list([], [], []).
 xor_list([B1|Bs1], [B2|Bs2], [B3|Bs3]):-
    xor_bits(B1, B2, B3),
    xor_list(Bs1, Bs2, Bs3).
 
-% @pred xor_bits(B1, B2, B3)
-% @arg B1 The first bit
-% @arg B2 The second bit
-% @arg B3 The result of the XOR operation between B1 and B2
+:- doc(section, auxiliary_predicates).
+:- doc(xor_bits/3, "Este predicado realiza la operación XOR entre dos bits.").
 
-% This predicate is true when B3 is the result of the XOR operation between B1 and B2.
-% The implementation uses a simple case analysis to determine the result of the XOR operation.
+:- pred xor_bits(B1, B2, B3) 
+   # "@var{B3} es el resultado de la operación XOR entre los bits @var{B1} y @var{B2}.
+      Su implementación es: @includedef{xor_bits/3}".
 
 xor_bits(b(0),b(0),b(0)).
 xor_bits(b(0),b(1),b(1)).
@@ -466,7 +569,7 @@ xor_bits(b(1),b(1),b(0)).
 % Test list with a single binary byte
 :- test byte_list(L) : (L = [[h(0), h(5)], [h(6), h(f)]]) + not_fails.
 % Test list with a single binary byte
-:- test byte_list(L) : (L = [[b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)]]) + not_fails.
+:- test byte_list(L) : (L = [[b(1), b(0), b(1), b(0), b(0), b(1), b(0), b(1)]]) + not_fails.
 % Test mixed list (binary and hex bytes)
 :- test byte_list(L) : (L = [[b(1), b(0), b(1), b(0), b(1), b(0), b(1), b(0)], [h(a), h(b)]]) + not_fails.
 % Test invalid list (not bytes)
